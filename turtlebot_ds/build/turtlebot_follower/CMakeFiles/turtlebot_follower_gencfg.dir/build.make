@@ -35,40 +35,40 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/turtlebot/turtlebot_ws/src
+CMAKE_SOURCE_DIR = /home/turtlebot/hri_project/turtlebot_ds/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/turtlebot/turtlebot_ws/build
+CMAKE_BINARY_DIR = /home/turtlebot/hri_project/turtlebot_ds/build
 
 # Utility rule file for turtlebot_follower_gencfg.
 
 # Include the progress variables for this target.
 include turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/progress.make
 
-turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
-turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py
+turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
+turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py
 
-/home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h: /home/turtlebot/turtlebot_ws/src/turtlebot_follower/cfg/Follower.cfg
-/home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h: /opt/ros/indigo/share/dynamic_reconfigure/cmake/../templates/ConfigType.py.template
-/home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h: /opt/ros/indigo/share/dynamic_reconfigure/cmake/../templates/ConfigType.h.template
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/turtlebot_ws/build/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating dynamic reconfigure files from cfg/Follower.cfg: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h /home/turtlebot/turtlebot_ws/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py"
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && ../catkin_generated/env_cached.sh /home/turtlebot/turtlebot_ws/build/turtlebot_follower/setup_custom_pythonpath.sh /home/turtlebot/turtlebot_ws/src/turtlebot_follower/cfg/Follower.cfg /opt/ros/indigo/share/dynamic_reconfigure/cmake/.. /home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower /home/turtlebot/turtlebot_ws/devel/lib/python2.7/dist-packages/turtlebot_follower
+/home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h: /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/cfg/Follower.cfg
+/home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h: /opt/ros/indigo/share/dynamic_reconfigure/cmake/../templates/ConfigType.py.template
+/home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h: /opt/ros/indigo/share/dynamic_reconfigure/cmake/../templates/ConfigType.h.template
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating dynamic reconfigure files from cfg/Follower.cfg: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h /home/turtlebot/hri_project/turtlebot_ds/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py"
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && ../catkin_generated/env_cached.sh /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/setup_custom_pythonpath.sh /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/cfg/Follower.cfg /opt/ros/indigo/share/dynamic_reconfigure/cmake/.. /home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/devel/lib/python2.7/dist-packages/turtlebot_follower
 
-/home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower/docs/FollowerConfig.dox: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
+/home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower/docs/FollowerConfig.dox: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
 
-/home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower/docs/FollowerConfig-usage.dox: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
+/home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower/docs/FollowerConfig-usage.dox: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
 
-/home/turtlebot/turtlebot_ws/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
 
-/home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower/docs/FollowerConfig.wikidoc: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
+/home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower/docs/FollowerConfig.wikidoc: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
 
 turtlebot_follower_gencfg: turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg
-turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
-turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower/docs/FollowerConfig.dox
-turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower/docs/FollowerConfig-usage.dox
-turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py
-turtlebot_follower_gencfg: /home/turtlebot/turtlebot_ws/devel/share/turtlebot_follower/docs/FollowerConfig.wikidoc
+turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
+turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower/docs/FollowerConfig.dox
+turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower/docs/FollowerConfig-usage.dox
+turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/lib/python2.7/dist-packages/turtlebot_follower/cfg/FollowerConfig.py
+turtlebot_follower_gencfg: /home/turtlebot/hri_project/turtlebot_ds/devel/share/turtlebot_follower/docs/FollowerConfig.wikidoc
 turtlebot_follower_gencfg: turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build.make
 .PHONY : turtlebot_follower_gencfg
 
@@ -77,10 +77,10 @@ turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build: turtlebot_fol
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build
 
 turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/clean:
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && $(CMAKE_COMMAND) -P CMakeFiles/turtlebot_follower_gencfg.dir/cmake_clean.cmake
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && $(CMAKE_COMMAND) -P CMakeFiles/turtlebot_follower_gencfg.dir/cmake_clean.cmake
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/clean
 
 turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/depend:
-	cd /home/turtlebot/turtlebot_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/turtlebot/turtlebot_ws/src /home/turtlebot/turtlebot_ws/src/turtlebot_follower /home/turtlebot/turtlebot_ws/build /home/turtlebot/turtlebot_ws/build/turtlebot_follower /home/turtlebot/turtlebot_ws/build/turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/turtlebot/hri_project/turtlebot_ds/src /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/build /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/depend
 

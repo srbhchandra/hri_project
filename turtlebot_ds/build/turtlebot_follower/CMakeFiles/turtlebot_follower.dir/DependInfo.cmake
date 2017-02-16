@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/follower.cpp" "/home/turtlebot/turtlebot_ws/build/turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o"
+  "/home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/follower.cpp" "/home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -21,8 +21,8 @@ SET(CMAKE_TARGET_LINKED_INFO_FILES
 
 # The include file search paths:
 SET(CMAKE_C_TARGET_INCLUDE_PATH
-  "/home/turtlebot/turtlebot_ws/devel/include"
-  "/home/turtlebot/turtlebot_ws/src/turtlebot_follower/include"
+  "/home/turtlebot/hri_project/turtlebot_ds/devel/include"
+  "/home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/include"
   "/opt/ros/indigo/include"
   )
 SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

@@ -1,3 +1,0 @@
-repository='https://github.com/tfoote/OpenNI2.git'
-module=''
-tag=''

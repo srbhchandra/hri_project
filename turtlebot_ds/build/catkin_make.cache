@@ -1,2 +1,2 @@
-procrob_functional:ros_astra_camera:ros_astra_launch:turtlebot/turtlebot:turtlebot/turtlebot_bringup:turtlebot/turtlebot_capabilities:turtlebot/turtlebot_description:turtlebot/turtlebot_teleop:turtlebot_follower:usb_cam
--DCATKIN_DEVEL_PREFIX=/home/turtlebot/turtlebot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/turtlebot/turtlebot_ws/install -G Unix Makefiles
+turtlebot_follower
+-DCATKIN_DEVEL_PREFIX=/home/turtlebot/hri_project/turtlebot_ds/devel -DCMAKE_INSTALL_PREFIX=/home/turtlebot/hri_project/turtlebot_ds/install -G Unix Makefiles

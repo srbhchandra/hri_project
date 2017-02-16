@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/turtlebot/turtlebot_ws/src
+CMAKE_SOURCE_DIR = /home/turtlebot/hri_project/turtlebot_ds/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/turtlebot/turtlebot_ws/build
+CMAKE_BINARY_DIR = /home/turtlebot/hri_project/turtlebot_ds/build
 
 # Utility rule file for std_srvs_generate_messages_py.
 
@@ -56,10 +56,10 @@ turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/build: std_srvs_
 .PHONY : turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/build
 
 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/clean:
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && $(CMAKE_COMMAND) -P CMakeFiles/std_srvs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && $(CMAKE_COMMAND) -P CMakeFiles/std_srvs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/clean
 
 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/depend:
-	cd /home/turtlebot/turtlebot_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/turtlebot/turtlebot_ws/src /home/turtlebot/turtlebot_ws/src/turtlebot_follower /home/turtlebot/turtlebot_ws/build /home/turtlebot/turtlebot_ws/build/turtlebot_follower /home/turtlebot/turtlebot_ws/build/turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/turtlebot/hri_project/turtlebot_ds/src /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/build /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/depend
 

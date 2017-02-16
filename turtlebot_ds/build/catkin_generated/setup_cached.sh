@@ -7,4 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export PWD="/home/turtlebot/turtlebot_ws/build"
+export PWD="/home/turtlebot/hri_project/turtlebot_ds/build"

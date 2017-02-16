@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/turtlebot/turtlebot_ws/src
+CMAKE_SOURCE_DIR = /home/turtlebot/hri_project/turtlebot_ds/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/turtlebot/turtlebot_ws/build
+CMAKE_BINARY_DIR = /home/turtlebot/hri_project/turtlebot_ds/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -120,14 +120,14 @@ test/fast: test
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/turtlebot/turtlebot_ws/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/turtlebot/turtlebot_ws/build/CMakeFiles /home/turtlebot/turtlebot_ws/build/turtlebot_follower/CMakeFiles/progress.marks
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/turtlebot/turtlebot_ws/build/CMakeFiles 0
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/CMakeFiles/progress.marks
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/clean
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/clean
 .PHONY : clean
 
 # The main clean target
@@ -136,22 +136,372 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/preinstall
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/preinstall
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/turtlebot/turtlebot_ws/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
+turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+bond_generate_messages_cpp: turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/rule
+.PHONY : bond_generate_messages_cpp
+
+# fast build rule for target.
+bond_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/build
+.PHONY : bond_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+bond_generate_messages_lisp: turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/rule
+.PHONY : bond_generate_messages_lisp
+
+# fast build rule for target.
+bond_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/build
+.PHONY : bond_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/rule
+
+# Convenience name for target.
+bond_generate_messages_py: turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/rule
+.PHONY : bond_generate_messages_py
+
+# fast build rule for target.
+bond_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/build
+.PHONY : bond_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule
+
+# Convenience name for target.
+dynamic_reconfigure_gencfg: turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/rule
+.PHONY : dynamic_reconfigure_gencfg
+
+# fast build rule for target.
+dynamic_reconfigure_gencfg/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/build.make turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/build
+.PHONY : dynamic_reconfigure_gencfg/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+dynamic_reconfigure_generate_messages_cpp: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/rule
+.PHONY : dynamic_reconfigure_generate_messages_cpp
+
+# fast build rule for target.
+dynamic_reconfigure_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/build
+.PHONY : dynamic_reconfigure_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+dynamic_reconfigure_generate_messages_lisp: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/rule
+.PHONY : dynamic_reconfigure_generate_messages_lisp
+
+# fast build rule for target.
+dynamic_reconfigure_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/build
+.PHONY : dynamic_reconfigure_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule
+
+# Convenience name for target.
+dynamic_reconfigure_generate_messages_py: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule
+.PHONY : dynamic_reconfigure_generate_messages_py
+
+# fast build rule for target.
+dynamic_reconfigure_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/build
+.PHONY : dynamic_reconfigure_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_cpp: turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/rule
+.PHONY : geometry_msgs_generate_messages_cpp
+
+# fast build rule for target.
+geometry_msgs_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/build
+.PHONY : geometry_msgs_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_lisp: turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/rule
+.PHONY : geometry_msgs_generate_messages_lisp
+
+# fast build rule for target.
+geometry_msgs_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/build
+.PHONY : geometry_msgs_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+geometry_msgs_generate_messages_py: turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_py.dir/rule
+.PHONY : geometry_msgs_generate_messages_py
+
+# fast build rule for target.
+geometry_msgs_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/geometry_msgs_generate_messages_py.dir/build
+.PHONY : geometry_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+nodelet_generate_messages_cpp: turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/rule
+.PHONY : nodelet_generate_messages_cpp
+
+# fast build rule for target.
+nodelet_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/build
+.PHONY : nodelet_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+nodelet_generate_messages_lisp: turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/rule
+.PHONY : nodelet_generate_messages_lisp
+
+# fast build rule for target.
+nodelet_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/build
+.PHONY : nodelet_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/rule
+
+# Convenience name for target.
+nodelet_generate_messages_py: turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/rule
+.PHONY : nodelet_generate_messages_py
+
+# fast build rule for target.
+nodelet_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/build
+.PHONY : nodelet_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+roscpp_generate_messages_cpp: turtlebot_follower/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
+.PHONY : roscpp_generate_messages_cpp
+
+# fast build rule for target.
+roscpp_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/roscpp_generate_messages_cpp.dir/build
+.PHONY : roscpp_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/roscpp_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+roscpp_generate_messages_lisp: turtlebot_follower/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
+.PHONY : roscpp_generate_messages_lisp
+
+# fast build rule for target.
+roscpp_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/roscpp_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/roscpp_generate_messages_lisp.dir/build
+.PHONY : roscpp_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/roscpp_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/roscpp_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/roscpp_generate_messages_py.dir/rule
+
+# Convenience name for target.
+roscpp_generate_messages_py: turtlebot_follower/CMakeFiles/roscpp_generate_messages_py.dir/rule
+.PHONY : roscpp_generate_messages_py
+
+# fast build rule for target.
+roscpp_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/roscpp_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/roscpp_generate_messages_py.dir/build
+.PHONY : roscpp_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+rosgraph_msgs_generate_messages_cpp: turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
+.PHONY : rosgraph_msgs_generate_messages_cpp
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build
+.PHONY : rosgraph_msgs_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+rosgraph_msgs_generate_messages_lisp: turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
+.PHONY : rosgraph_msgs_generate_messages_lisp
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build
+.PHONY : rosgraph_msgs_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+rosgraph_msgs_generate_messages_py: turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
+.PHONY : rosgraph_msgs_generate_messages_py
+
+# fast build rule for target.
+rosgraph_msgs_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build
+.PHONY : rosgraph_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_cpp: turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+.PHONY : sensor_msgs_generate_messages_cpp
+
+# fast build rule for target.
+sensor_msgs_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
+.PHONY : sensor_msgs_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_lisp: turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+.PHONY : sensor_msgs_generate_messages_lisp
+
+# fast build rule for target.
+sensor_msgs_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
+.PHONY : sensor_msgs_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+sensor_msgs_generate_messages_py: turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
+.PHONY : sensor_msgs_generate_messages_py
+
+# fast build rule for target.
+sensor_msgs_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
+.PHONY : sensor_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_cpp: turtlebot_follower/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
+.PHONY : std_msgs_generate_messages_cpp
+
+# fast build rule for target.
+std_msgs_generate_messages_cpp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
+.PHONY : std_msgs_generate_messages_cpp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_lisp: turtlebot_follower/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
+.PHONY : std_msgs_generate_messages_lisp
+
+# fast build rule for target.
+std_msgs_generate_messages_lisp/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
+.PHONY : std_msgs_generate_messages_lisp/fast
+
+# Convenience name for target.
+turtlebot_follower/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+.PHONY : turtlebot_follower/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_py: turtlebot_follower/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+.PHONY : std_msgs_generate_messages_py
+
+# fast build rule for target.
+std_msgs_generate_messages_py/fast:
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/std_msgs_generate_messages_py.dir/build
+.PHONY : std_msgs_generate_messages_py/fast
+
+# Convenience name for target.
 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
@@ -160,12 +510,12 @@ std_srvs_generate_messages_cpp: turtlebot_follower/CMakeFiles/std_srvs_generate_
 
 # fast build rule for target.
 std_srvs_generate_messages_cpp/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/build
 .PHONY : std_srvs_generate_messages_cpp/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
@@ -174,12 +524,12 @@ std_srvs_generate_messages_lisp: turtlebot_follower/CMakeFiles/std_srvs_generate
 
 # fast build rule for target.
 std_srvs_generate_messages_lisp/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/build
 .PHONY : std_srvs_generate_messages_lisp/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/rule
 
 # Convenience name for target.
@@ -188,12 +538,12 @@ std_srvs_generate_messages_py: turtlebot_follower/CMakeFiles/std_srvs_generate_m
 
 # fast build rule for target.
 std_srvs_generate_messages_py/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/build
 .PHONY : std_srvs_generate_messages_py/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/rule
 
 # Convenience name for target.
@@ -202,12 +552,12 @@ turtlebot_follower: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/rule
 
 # fast build rule for target.
 turtlebot_follower/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build
 .PHONY : turtlebot_follower/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/rule
 
 # Convenience name for target.
@@ -216,12 +566,12 @@ turtlebot_follower_gencfg: turtlebot_follower/CMakeFiles/turtlebot_follower_genc
 
 # fast build rule for target.
 turtlebot_follower_gencfg/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build
 .PHONY : turtlebot_follower_gencfg/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
@@ -230,12 +580,12 @@ turtlebot_msgs_generate_messages_cpp: turtlebot_follower/CMakeFiles/turtlebot_ms
 
 # fast build rule for target.
 turtlebot_msgs_generate_messages_cpp/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/build
 .PHONY : turtlebot_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
@@ -244,12 +594,12 @@ turtlebot_msgs_generate_messages_lisp: turtlebot_follower/CMakeFiles/turtlebot_m
 
 # fast build rule for target.
 turtlebot_msgs_generate_messages_lisp/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/build
 .PHONY : turtlebot_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
@@ -258,12 +608,12 @@ turtlebot_msgs_generate_messages_py: turtlebot_follower/CMakeFiles/turtlebot_msg
 
 # fast build rule for target.
 turtlebot_msgs_generate_messages_py/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/build
 .PHONY : turtlebot_msgs_generate_messages_py/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
 
 # Convenience name for target.
@@ -272,12 +622,12 @@ visualization_msgs_generate_messages_cpp: turtlebot_follower/CMakeFiles/visualiz
 
 # fast build rule for target.
 visualization_msgs_generate_messages_cpp/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
 .PHONY : visualization_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule
 
 # Convenience name for target.
@@ -286,12 +636,12 @@ visualization_msgs_generate_messages_lisp: turtlebot_follower/CMakeFiles/visuali
 
 # fast build rule for target.
 visualization_msgs_generate_messages_lisp/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/build.make turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/build
 .PHONY : visualization_msgs_generate_messages_lisp/fast
 
 # Convenience name for target.
 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
 .PHONY : turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
@@ -300,7 +650,7 @@ visualization_msgs_generate_messages_py: turtlebot_follower/CMakeFiles/visualiza
 
 # fast build rule for target.
 visualization_msgs_generate_messages_py/fast:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
 .PHONY : visualization_msgs_generate_messages_py/fast
 
 src/follower.o: src/follower.cpp.o
@@ -308,7 +658,7 @@ src/follower.o: src/follower.cpp.o
 
 # target to build an object file
 src/follower.cpp.o:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o
 .PHONY : src/follower.cpp.o
 
 src/follower.i: src/follower.cpp.i
@@ -316,7 +666,7 @@ src/follower.i: src/follower.cpp.i
 
 # target to preprocess a source file
 src/follower.cpp.i:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.i
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.i
 .PHONY : src/follower.cpp.i
 
 src/follower.s: src/follower.cpp.s
@@ -324,7 +674,7 @@ src/follower.s: src/follower.cpp.s
 
 # target to generate assembly for a file
 src/follower.cpp.s:
-	cd /home/turtlebot/turtlebot_ws/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.s
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.s
 .PHONY : src/follower.cpp.s
 
 # Help Target
@@ -333,12 +683,37 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... bond_generate_messages_cpp"
+	@echo "... bond_generate_messages_lisp"
+	@echo "... bond_generate_messages_py"
+	@echo "... dynamic_reconfigure_gencfg"
+	@echo "... dynamic_reconfigure_generate_messages_cpp"
+	@echo "... dynamic_reconfigure_generate_messages_lisp"
+	@echo "... dynamic_reconfigure_generate_messages_py"
 	@echo "... edit_cache"
+	@echo "... geometry_msgs_generate_messages_cpp"
+	@echo "... geometry_msgs_generate_messages_lisp"
+	@echo "... geometry_msgs_generate_messages_py"
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
 	@echo "... list_install_components"
+	@echo "... nodelet_generate_messages_cpp"
+	@echo "... nodelet_generate_messages_lisp"
+	@echo "... nodelet_generate_messages_py"
 	@echo "... rebuild_cache"
+	@echo "... roscpp_generate_messages_cpp"
+	@echo "... roscpp_generate_messages_lisp"
+	@echo "... roscpp_generate_messages_py"
+	@echo "... rosgraph_msgs_generate_messages_cpp"
+	@echo "... rosgraph_msgs_generate_messages_lisp"
+	@echo "... rosgraph_msgs_generate_messages_py"
+	@echo "... sensor_msgs_generate_messages_cpp"
+	@echo "... sensor_msgs_generate_messages_lisp"
+	@echo "... sensor_msgs_generate_messages_py"
+	@echo "... std_msgs_generate_messages_cpp"
+	@echo "... std_msgs_generate_messages_lisp"
+	@echo "... std_msgs_generate_messages_py"
 	@echo "... std_srvs_generate_messages_cpp"
 	@echo "... std_srvs_generate_messages_lisp"
 	@echo "... std_srvs_generate_messages_py"
@@ -365,6 +740,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/turtlebot/turtlebot_ws/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

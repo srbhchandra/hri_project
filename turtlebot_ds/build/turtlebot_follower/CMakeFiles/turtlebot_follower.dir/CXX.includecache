@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/turtlebot/turtlebot_ws/devel/include/turtlebot_follower/FollowerConfig.h
+/home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
 dynamic_reconfigure/config_tools.h
 -
 limits
@@ -24,7 +24,7 @@ dynamic_reconfigure/config_init_mutex.h
 boost/any.hpp
 -
 
-/home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/follower.cpp
+/home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/follower.cpp
 ros/ros.h
 -
 stdlib.h
@@ -41,14 +41,10 @@ visualization_msgs/Marker.h
 -
 turtlebot_msgs/SetFollowState.h
 -
-kobuki_msgs/BumperEvent.h
--
 dynamic_reconfigure/server.h
-/home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/dynamic_reconfigure/server.h
+/home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/dynamic_reconfigure/server.h
 turtlebot_follower/FollowerConfig.h
-/home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/turtlebot_follower/FollowerConfig.h
-kobuki_msgs/Sound.h
--
+/home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/turtlebot_follower/FollowerConfig.h
 depth_image_proc/depth_traits.h
 -
 
@@ -439,38 +435,6 @@ geometry_msgs/Vector3.h
 -
 
 /opt/ros/indigo/include/geometry_msgs/Vector3.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-
-/opt/ros/indigo/include/kobuki_msgs/BumperEvent.h
-string
--
-vector
--
-map
--
-ros/types.h
--
-ros/serialization.h
--
-ros/builtin_message_traits.h
--
-ros/message_operations.h
--
-
-/opt/ros/indigo/include/kobuki_msgs/Sound.h
 string
 -
 vector

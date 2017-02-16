@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/turtlebot/turtlebot_ws/src
+CMAKE_SOURCE_DIR = /home/turtlebot/hri_project/turtlebot_ds/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/turtlebot/turtlebot_ws/build
+CMAKE_BINARY_DIR = /home/turtlebot/hri_project/turtlebot_ds/build
 
 # Include any dependencies generated for this target.
 include turtlebot_follower/CMakeFiles/turtlebot_follower.dir/depend.make
@@ -50,18 +50,18 @@ include turtlebot_follower/CMakeFiles/turtlebot_follower.dir/progress.make
 include turtlebot_follower/CMakeFiles/turtlebot_follower.dir/flags.make
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/flags.make
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o: /home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/follower.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/turtlebot_ws/build/CMakeFiles $(CMAKE_PROGRESS_1)
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o: /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/follower.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o"
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o -c /home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/follower.cpp
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o -c /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/follower.cpp
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/turtlebot_follower.dir/src/follower.cpp.i"
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/follower.cpp > CMakeFiles/turtlebot_follower.dir/src/follower.cpp.i
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/follower.cpp > CMakeFiles/turtlebot_follower.dir/src/follower.cpp.i
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/turtlebot_follower.dir/src/follower.cpp.s"
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/turtlebot/turtlebot_ws/src/turtlebot_follower/src/follower.cpp -o CMakeFiles/turtlebot_follower.dir/src/follower.cpp.s
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/follower.cpp -o CMakeFiles/turtlebot_follower.dir/src/follower.cpp.s
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o.requires:
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o.requires
@@ -79,51 +79,51 @@ turtlebot_follower_OBJECTS = \
 # External object files for target turtlebot_follower
 turtlebot_follower_EXTERNAL_OBJECTS =
 
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libnodeletlib.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libbondcpp.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libuuid.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libtinyxml.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libclass_loader.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/libPocoFoundation.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libdl.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libroslib.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libroscpp.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_signals.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librosconsole.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librosconsole_log4cxx.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librosconsole_backend_interface.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/liblog4cxx.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_regex.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libxmlrpcpp.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libdepth_image_proc.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libdynamic_reconfigure_config_init_mutex.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libroscpp_serialization.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librostime.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libcpp_common.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_system.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_thread.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
-/home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX shared library /home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so"
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/turtlebot_follower.dir/link.txt --verbose=$(VERBOSE)
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libnodeletlib.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libbondcpp.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libuuid.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libtinyxml.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libclass_loader.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/libPocoFoundation.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libdl.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libroslib.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libroscpp.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_signals.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librosconsole.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librosconsole_log4cxx.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librosconsole_backend_interface.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/liblog4cxx.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_regex.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libxmlrpcpp.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libdepth_image_proc.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libdynamic_reconfigure_config_init_mutex.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libroscpp_serialization.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/librostime.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_date_time.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /opt/ros/indigo/lib/libcpp_common.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_system.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libboost_thread.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libpthread.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so
+/home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX shared library /home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so"
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/turtlebot_follower.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build: /home/turtlebot/turtlebot_ws/devel/lib/libturtlebot_follower.so
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build: /home/turtlebot/hri_project/turtlebot_ds/devel/lib/libturtlebot_follower.so
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/requires: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/src/follower.cpp.o.requires
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/requires
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/clean:
-	cd /home/turtlebot/turtlebot_ws/build/turtlebot_follower && $(CMAKE_COMMAND) -P CMakeFiles/turtlebot_follower.dir/cmake_clean.cmake
+	cd /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower && $(CMAKE_COMMAND) -P CMakeFiles/turtlebot_follower.dir/cmake_clean.cmake
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/clean
 
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/depend:
-	cd /home/turtlebot/turtlebot_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/turtlebot/turtlebot_ws/src /home/turtlebot/turtlebot_ws/src/turtlebot_follower /home/turtlebot/turtlebot_ws/build /home/turtlebot/turtlebot_ws/build/turtlebot_follower /home/turtlebot/turtlebot_ws/build/turtlebot_follower/CMakeFiles/turtlebot_follower.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/turtlebot/hri_project/turtlebot_ds/src /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/build /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower /home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/CMakeFiles/turtlebot_follower.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/depend
 

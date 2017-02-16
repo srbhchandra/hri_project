@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /home/turtlebot/turtlebot_ws/devel/setup.sh
+    local-name: /home/turtlebot/hri_project/turtlebot_ds/devel/setup.sh

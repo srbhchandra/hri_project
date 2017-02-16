@@ -35,10 +35,8 @@
 #include <sensor_msgs/Image.h>
 #include <visualization_msgs/Marker.h>
 #include <turtlebot_msgs/SetFollowState.h>
-#include <kobuki_msgs/BumperEvent.h>
 #include "dynamic_reconfigure/server.h"
 #include "turtlebot_follower/FollowerConfig.h"
-#include <kobuki_msgs/Sound.h>
 #include <depth_image_proc/depth_traits.h>
 
 
@@ -58,9 +56,9 @@ public:
    * @brief The constructor for the follower.
    * Constructor for the follower.
    */
-  TurtlebotFollower() : min_y_(0.1), max_y_(0.5),
-                        min_x_(-0.2), max_x_(0.2),
-                        max_z_(0.8), goal_z_(0.6),
+  TurtlebotFollower() : min_y_(-0.5), max_y_(0.5),
+                        min_x_(-0.5), max_x_(0.5),
+                        max_z_(0.8), goal_z_(0.8),
                         z_scale_(1.0), x_scale_(5.0)
   {
 
@@ -81,7 +79,7 @@ private:
   double z_scale_; /**< The scaling factor for translational robot speed */
   double x_scale_; /**< The scaling factor for rotational robot speed */
   bool   enabled_; /**< Enable/disable following; just prevents motor commands */
-  bool play_sound = false;
+
   // Service for start/stop following
   ros::ServiceServer switch_srv_;
 
@@ -107,12 +105,11 @@ private:
     private_nh.getParam("z_scale", z_scale_);
     private_nh.getParam("x_scale", x_scale_);
     private_nh.getParam("enabled", enabled_);
-
+enabled_ = true;
     cmdpub_ = private_nh.advertise<geometry_msgs::Twist> ("cmd_vel", 1);
     markerpub_ = private_nh.advertise<visualization_msgs::Marker>("marker",1);
     bboxpub_ = private_nh.advertise<visualization_msgs::Marker>("bbox",1);
     sub_= nh.subscribe<sensor_msgs::Image>("depth/image_rect", 1, &TurtlebotFollower::imagecb, this);
-    sub2 = nh.subscribe("/mobile_base/events/bumper", 1, &TurtlebotFollower::bumperCallback, this);
     switch_srv_ = private_nh.advertiseService("change_state", &TurtlebotFollower::changeModeSrvCb, this);
 
     config_srv_ = new dynamic_reconfigure::Server<turtlebot_follower::FollowerConfig>(private_nh);
@@ -133,20 +130,6 @@ private:
     x_scale_ = config.x_scale;
   }
 
-void bumperCallback(const kobuki_msgs::BumperEvent &e){
-	ROS_INFO_THROTTLE(1,"%d",e.state);
-	play_sound = true;
-	system("mpg123 Ouch.mp3");
-        for(int i=0;i<7;i++){
-		
-		ros::NodeHandle& n = getNodeHandle();
-		ros::Publisher sound = n.advertise<kobuki_msgs::Sound>("/mobile_base/commands/sound", 1);
-		kobuki_msgs::Sound cmd;
-		cmd.value = i;
-       	 	sound.publish(cmd);
-	}
-	
-}
   /*!
    * @bief Callback for point clouds.
    * Callback for depth images. It finds the centroid
@@ -159,6 +142,8 @@ void bumperCallback(const kobuki_msgs::BumperEvent &e){
 
     // Precompute the sin function for each row and column
     uint32_t image_width = depth_msg->width;
+    static uint32_t rotate_counter = 0;
+    static bool rotate_flag = false;
     float x_radians_per_pixel = 60.0/57.0/image_width;
     float sin_pixel_x[image_width];
     for (int x = 0; x < image_width; ++x) {
@@ -175,7 +160,6 @@ void bumperCallback(const kobuki_msgs::BumperEvent &e){
 
     //X,Y,Z of the centroid
     float x = 0.0;
-float prev_x = 0.0;
     float y = 0.0;
     float z = 1e6;
     //Number of points observed
@@ -202,45 +186,75 @@ float prev_x = 0.0;
        }
      }
     }
-	
+float temp;
+    
     //If there are points, find the centroid and calculate the command goal.
     //If there are no points, simply publish a stop goal.
     if (n>4000)
     {
+      if (rotate_flag == true) {
+          goto ROTATE_FLAG;
+      }
       x /= n;
       y /= n;
-	prev_x = x;
       if(z > max_z_){
         ROS_INFO_THROTTLE(1, "Centroid too far away %f, stopping the robot\n", z);
-        //if (enabled_)
-        //{
+	ROS_INFO_THROTTLE(1, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
+        if (enabled_)
+        {
         geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-	//if (prev_x > 0) cmd->angular.z = 0.4;
 	cmd->angular.z = -0.4;
 	cmdpub_.publish(cmd);
-        //}
+        }
         return;
       }
 
-      ROS_INFO_THROTTLE(1, "Centroid at %f %f %f with %d points", x, y, z, n);
-      ROS_INFO_THROTTLE(1, "Running the new package");
+      ROS_INFO_THROTTLE(1, "Centroid at %f %f %f with %d POINTS", x, y, z, n);
       publishMarker(x, y, z);
-
-      if(play_sound){
-ROS_INFO_THROTTLE(1, "PLAY SOUND");
-ros::NodeHandle& n = getNodeHandle();
-ros::Publisher sound = n.advertise<kobuki_msgs::Sound>("/mobile_base/commands/sound", 1);
-		kobuki_msgs::Sound cmd;
-		cmd.value = 6;
-       	 	sound.publish(cmd);
-}
-
       if (enabled_)
       {
-        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-        cmd->linear.x = (z - goal_z_) * z_scale_;
-        cmd->angular.z = -x * x_scale_;
-        cmdpub_.publish(cmd);
+	temp = fabs(x * x_scale_);
+//ROS_INFO_THROTTLE(1, "x * x_scale_ = %f", temp);
+
+	if (temp < 0.03) {
+		ROTATE_FLAG:
+	        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+		if (rotate_counter < 25) {
+ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
+		cmd->angular.z = -1.8;
+			rotate_flag = true;
+			rotate_counter ++;
+		} else if (rotate_counter < 50) {
+ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
+		cmd->angular.z = -1.8;
+			rotate_flag = true;
+			rotate_counter ++;
+		} else if (rotate_counter < 75) {
+ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
+		cmd->angular.z = -1.8;
+			rotate_flag = true;
+			rotate_counter ++;
+		} else if (rotate_counter < 100) {
+ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
+		cmd->angular.z = -1.8;
+			rotate_flag = true;
+			rotate_counter ++;
+		} else {
+ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
+			rotate_flag = false;
+			rotate_counter = 0;
+		}
+	        cmdpub_.publish(cmd);
+
+	} else {		
+
+	        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+		cmd->linear.x = (z - goal_z_) * z_scale_;
+		cmd->angular.z = -x * x_scale_;
+	        cmdpub_.publish(cmd);
+	}
+
+//	return;
       }
     }
     else
@@ -248,13 +262,11 @@ ros::Publisher sound = n.advertise<kobuki_msgs::Sound>("/mobile_base/commands/so
       ROS_INFO_THROTTLE(1, "Not enough points(%d) detected, stopping the robot", n);
       publishMarker(x, y, z);
 
-      //if (enabled_)
-      //{
+      if (enabled_)
+      {
 	geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-      //  if (prev_x > 0) cmd->angular.z = 0.4;
-	cmd->angular.z = -0.4;
 	cmdpub_.publish(cmd);
-      //}
+      }
     }
 
     publishBbox();
@@ -342,7 +354,6 @@ ros::Publisher sound = n.advertise<kobuki_msgs::Sound>("/mobile_base/commands/so
   }
 
   ros::Subscriber sub_;
-ros::Subscriber sub2;
   ros::Publisher cmdpub_;
   ros::Publisher markerpub_;
   ros::Publisher bboxpub_;
