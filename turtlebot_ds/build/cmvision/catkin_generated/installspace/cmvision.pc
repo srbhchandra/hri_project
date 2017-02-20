@@ -1,0 +1,8 @@
+prefix=/home/turtlebot/hri_project/turtlebot_ds/install
+
+Name: cmvision
+Description: Description of cmvision
+Version: 0.4.1
+Cflags: -I/home/turtlebot/hri_project/turtlebot_ds/install/include
+Libs: -L/home/turtlebot/hri_project/turtlebot_ds/install/lib 
+Requires: message_runtime std_msgs
