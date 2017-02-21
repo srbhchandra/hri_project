@@ -38,7 +38,8 @@
 #include "dynamic_reconfigure/server.h"
 #include "turtlebot_follower/FollowerConfig.h"
 #include <depth_image_proc/depth_traits.h>
-
+#include <cmvision/Blob.h>
+#include <cmvision/Blobs.h>
 
 namespace turtlebot_follower
 {
@@ -79,7 +80,13 @@ private:
   double z_scale_; /**< The scaling factor for translational robot speed */
   double x_scale_; /**< The scaling factor for rotational robot speed */
   bool   enabled_; /**< Enable/disable following; just prevents motor commands */
-
+  float z;
+  int cent_x, prev_cent_x;
+  int max_area, max_index;
+  int max_prev_area, max_prev_index;
+  //bool object_found;
+  double object_found;
+  double object_found_steps;
   // Service for start/stop following
   ros::ServiceServer switch_srv_;
 
@@ -105,17 +112,29 @@ private:
     private_nh.getParam("z_scale", z_scale_);
     private_nh.getParam("x_scale", x_scale_);
     private_nh.getParam("enabled", enabled_);
-enabled_ = true;
-    cmdpub_ = private_nh.advertise<geometry_msgs::Twist> ("cmd_vel", 1);
-    markerpub_ = private_nh.advertise<visualization_msgs::Marker>("marker",1);
-    bboxpub_ = private_nh.advertise<visualization_msgs::Marker>("bbox",1);
-    sub_= nh.subscribe<sensor_msgs::Image>("depth/image_rect", 1, &TurtlebotFollower::imagecb, this);
+    enabled_ = true;
+    
+    cmdpub_     = private_nh.advertise<geometry_msgs::Twist> ("cmd_vel", 1);
+    markerpub_  = private_nh.advertise<visualization_msgs::Marker>("marker",1);
+    bboxpub_    = private_nh.advertise<visualization_msgs::Marker>("bbox",1);
     switch_srv_ = private_nh.advertiseService("change_state", &TurtlebotFollower::changeModeSrvCb, this);
 
+    sub_             = nh.subscribe<sensor_msgs::Image>("depth/image_rect", 1, &TurtlebotFollower::imagecb, this);
+    blobsSubscriber_ = nh.subscribe("/blobs", 1, &TurtlebotFollower::blobsCallBack, this);
+
     config_srv_ = new dynamic_reconfigure::Server<turtlebot_follower::FollowerConfig>(private_nh);
-    dynamic_reconfigure::Server<turtlebot_follower::FollowerConfig>::CallbackType f =
-        boost::bind(&TurtlebotFollower::reconfigure, this, _1, _2);
+    dynamic_reconfigure::Server<turtlebot_follower::FollowerConfig>::CallbackType f = boost::bind(&TurtlebotFollower::reconfigure, this, _1, _2);
     config_srv_->setCallback(f);
+
+    z = 1e6;
+    cent_x = 0;
+    prev_cent_x = 0;
+    max_area = -1;
+    max_index = -1;
+    max_prev_area = -1;
+    max_prev_index = -1;
+    object_found = 0;//false;
+    object_found_steps = 1;//0.2;
   }
 
   void reconfigure(turtlebot_follower::FollowerConfig &config, uint32_t level)
@@ -130,6 +149,82 @@ enabled_ = true;
     x_scale_ = config.x_scale;
   }
 
+  void rotate(double radians)
+  {
+    geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+    cmd->angular.z = radians;
+    cmdpub_.publish(cmd);
+  }
+
+  void blobsCallBack (const cmvision::Blobs& blobsIn)
+  {
+    int area, i;
+    ROS_INFO("Num Blob Count = %d", blobsIn.blob_count);
+
+    if ( z > max_z_ || blobsIn.blob_count == 0)
+    {
+      if (object_found == 1)
+        ROS_INFO("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      rotate(-0.4);
+      return;
+    } 
+
+    max_prev_area = max_area;
+    max_area      = -1;
+
+    // Find the largest region.
+    for (i = 0; i < blobsIn.blob_count; i++) 
+    {
+      if (blobsIn.blobs[i].red == 0 && blobsIn.blobs[i].green == 0 && blobsIn.blobs[i].blue == 255) 
+      {
+        //area = (blobsIn.blobs[i].right - blobsIn.blobs[i].left) * (blobsIn.blobs[i].bottom - blobsIn.blobs[i].top);
+        area = blobsIn.blobs[i].area;
+        if (area > max_area)
+        {
+          max_area = area;
+          max_index = i;
+        }
+      }
+    }
+
+    if (object_found == 1)
+    {
+      // Take the centroid.
+      prev_cent_x = cent_x;
+      cent_x = blobsIn.blobs[max_index].x;
+      int diff_x = cent_x - prev_cent_x; 
+
+      ROS_INFO("Max area at [%d] = %d", max_index, max_area);
+      ROS_INFO("cent_x = %d, diff_x = %d", cent_x, diff_x);
+      
+      geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+      // Position the bot to the centroid.
+//      cmd->angular.z = -diff_x * x_scale_;
+      cmd->linear.x = (z - goal_z_) * z_scale_;
+      ROS_INFO("Blue blob found::: cmd->linear.x = %f   cmd->angular.z = %f", cmd->linear.x, cmd->angular.z);
+      cmdpub_.publish(cmd);
+      if (cmd->linear.x == 0)
+      {
+        object_found = 0;//false;
+      }
+      return;
+    }
+
+    if ( max_area > max_prev_area)
+    {
+      rotate(-0.4);
+      if (object_found > 0)
+        object_found = object_found + object_found_steps;
+      return;
+    }
+    else
+    {
+      rotate(0.4);
+      object_found = object_found + object_found_steps;// = true;
+      return;
+    }
+  }
+
   /*!
    * @bief Callback for point clouds.
    * Callback for depth images. It finds the centroid
@@ -137,6 +232,7 @@ enabled_ = true;
    * Publishes cmd_vel messages with the goal from the image.
    * @param cloud The point cloud message.
    */
+/*  ------- ROTATE CODE ------------------
   void imagecb(const sensor_msgs::ImageConstPtr& depth_msg)
   {
 
@@ -271,6 +367,102 @@ ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
 
     publishBbox();
   }
+*/
+  void imagecb(const sensor_msgs::ImageConstPtr& depth_msg)
+  {
+
+    // Precompute the sin function for each row and column
+    uint32_t image_width = depth_msg->width;
+    float x_radians_per_pixel = 60.0/57.0/image_width;
+    float sin_pixel_x[image_width];
+    for (int x = 0; x < image_width; ++x) {
+      sin_pixel_x[x] = sin((x - image_width/ 2.0)  * x_radians_per_pixel);
+    }
+
+    uint32_t image_height = depth_msg->height;
+    float y_radians_per_pixel = 45.0/57.0/image_width;
+    float sin_pixel_y[image_height];
+    for (int y = 0; y < image_height; ++y) {
+      // Sign opposite x for y up values
+      sin_pixel_y[y] = sin((image_height/ 2.0 - y)  * y_radians_per_pixel);
+    }
+
+    //X,Y,Z of the centroid
+    float x = 0.0;
+    float y = 0.0;
+    z = 1e6;
+    //Number of points observed
+    unsigned int n = 0;
+
+    //Iterate through all the points in the region and find the average of the position
+    const float* depth_row = reinterpret_cast<const float*>(&depth_msg->data[0]);
+    int row_step = depth_msg->step / sizeof(float);
+    for (int v = 0; v < (int)depth_msg->height; ++v, depth_row += row_step)
+    {
+     for (int u = 0; u < (int)depth_msg->width; ++u)
+     {
+       float depth = depth_image_proc::DepthTraits<float>::toMeters(depth_row[u]);
+       if (!depth_image_proc::DepthTraits<float>::valid(depth) || depth > max_z_) continue;
+       float y_val = sin_pixel_y[v] * depth;
+       float x_val = sin_pixel_x[u] * depth;
+       if ( y_val > min_y_ && y_val < max_y_ &&
+            x_val > min_x_ && x_val < max_x_)
+       {
+         x += x_val;
+         y += y_val;
+         z = std::min(z, depth); //approximate depth as forward.
+         n++;
+       }
+     }
+    }
+//    ROS_INFO("Image cb:: Updating z = %f", z);
+    //If there are points, find the centroid and calculate the command goal.
+    //If there are no points, simply publish a stop goal.
+    if (n>4000)
+    {
+      x /= n;
+      y /= n;
+      if(z > max_z_){
+        ROS_INFO_THROTTLE(1, "Centroid too far away %f, stopping the robot\n", z);
+        publishMarker(x, y, z);
+#if 0
+        if (enabled_)
+        {
+        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+        cmd->angular.z = -0.4;
+        cmdpub_.publish(cmd);
+        }
+        return;
+      }
+
+      ROS_INFO_THROTTLE(1, "Centroid at %f %f %f with %d POINTS", x, y, z, n);
+      
+      if (enabled_)
+      {
+        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+        cmd->linear.x = (z - goal_z_) * z_scale_;
+        cmd->angular.z = -x * x_scale_;
+        ROS_INFO("Image cb:: cmd->linear.x = %f", cmd->linear.x);
+        cmdpub_.publish(cmd);
+      }
+#else
+      }
+#endif
+
+    }
+    else
+    {
+      ROS_INFO_THROTTLE(1, "Not enough points(%d) detected, stopping the robot", n);
+      publishMarker(x, y, z);
+
+      if (enabled_)
+      {
+        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+        cmdpub_.publish(cmd);
+      }
+    }
+    publishBbox();
+  }
 
   bool changeModeSrvCb(turtlebot_msgs::SetFollowState::Request& request,
                        turtlebot_msgs::SetFollowState::Response& response)
@@ -357,6 +549,7 @@ ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
   ros::Publisher cmdpub_;
   ros::Publisher markerpub_;
   ros::Publisher bboxpub_;
+  ros::Subscriber blobsSubscriber_;
 };
 
 PLUGINLIB_DECLARE_CLASS(turtlebot_follower, TurtlebotFollower, turtlebot_follower::TurtlebotFollower, nodelet::Nodelet);

@@ -6,6 +6,42 @@
 
 #IncludeRegexTransform: 
 
+/home/turtlebot/hri_project/turtlebot_ds/devel/include/cmvision/Blob.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+
+/home/turtlebot/hri_project/turtlebot_ds/devel/include/cmvision/Blobs.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+std_msgs/Header.h
+-
+cmvision/Blob.h
+-
+
 /home/turtlebot/hri_project/turtlebot_ds/devel/include/turtlebot_follower/FollowerConfig.h
 dynamic_reconfigure/config_tools.h
 -
@@ -46,6 +82,10 @@ dynamic_reconfigure/server.h
 turtlebot_follower/FollowerConfig.h
 /home/turtlebot/hri_project/turtlebot_ds/src/turtlebot_follower/src/turtlebot_follower/FollowerConfig.h
 depth_image_proc/depth_traits.h
+-
+cmvision/Blob.h
+-
+cmvision/Blobs.h
 -
 
 /opt/ros/indigo/include/XmlRpcDecl.h
