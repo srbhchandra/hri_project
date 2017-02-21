@@ -289,8 +289,17 @@ class_loader_DIR:PATH=/opt/ros/indigo/share/class_loader/cmake
 //Value Computed by CMake
 cmvision_BINARY_DIR:STATIC=/home/turtlebot/hri_project/turtlebot_ds/build/cmvision
 
+//The directory containing a CMake configuration file for cmvision.
+cmvision_DIR:PATH=/home/turtlebot/hri_project/turtlebot_ds/devel/share/cmvision/cmake
+
 //Value Computed by CMake
 cmvision_SOURCE_DIR:STATIC=/home/turtlebot/hri_project/turtlebot_ds/src/cmvision
+
+//Value Computed by CMake
+color_tracking_BINARY_DIR:STATIC=/home/turtlebot/hri_project/turtlebot_ds/build/color_tracking
+
+//Value Computed by CMake
+color_tracking_SOURCE_DIR:STATIC=/home/turtlebot/hri_project/turtlebot_ds/src/color_tracking
 
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/indigo/share/cpp_common/cmake
@@ -522,7 +531,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=4
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=5
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

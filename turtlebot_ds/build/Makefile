@@ -579,6 +579,19 @@ std_msgs_generate_messages_py/fast:
 .PHONY : std_msgs_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named color_tracking_node
+
+# Build rule for target.
+color_tracking_node: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 color_tracking_node
+.PHONY : color_tracking_node
+
+# fast build rule for target.
+color_tracking_node/fast:
+	$(MAKE) -f color_tracking/CMakeFiles/color_tracking_node.dir/build.make color_tracking/CMakeFiles/color_tracking_node.dir/build
+.PHONY : color_tracking_node/fast
+
+#=============================================================================
 # Target rules for targets named bond_generate_messages_cpp
 
 # Build rule for target.
@@ -897,6 +910,7 @@ help:
 	@echo "... std_msgs_generate_messages_cpp"
 	@echo "... std_msgs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_py"
+	@echo "... color_tracking_node"
 	@echo "... bond_generate_messages_cpp"
 	@echo "... bond_generate_messages_lisp"
 	@echo "... bond_generate_messages_py"

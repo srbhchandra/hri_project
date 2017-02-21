@@ -1,0 +1,8 @@
+prefix=/home/turtlebot/hri_project/turtlebot_ds/install
+
+Name: color_tracking
+Description: Description of color_tracking
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/turtlebot/hri_project/turtlebot_ds/install/lib 
+Requires: 

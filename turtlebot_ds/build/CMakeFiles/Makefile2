@@ -230,7 +230,7 @@ gtest/preinstall:
 gtest/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f gtest/CMakeFiles/gtest.dir/build.make gtest/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f gtest/CMakeFiles/gtest.dir/build.make gtest/CMakeFiles/gtest.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  15
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  16
 	@echo "Built target gtest"
 .PHONY : gtest/CMakeFiles/gtest.dir/all
 
@@ -261,7 +261,7 @@ clean: gtest/CMakeFiles/gtest.dir/clean
 gtest/CMakeFiles/gtest_main.dir/all: gtest/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest/CMakeFiles/gtest_main.dir/build.make gtest/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f gtest/CMakeFiles/gtest_main.dir/build.make gtest/CMakeFiles/gtest_main.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  16
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  17
 	@echo "Built target gtest_main"
 .PHONY : gtest/CMakeFiles/gtest_main.dir/all
 
@@ -459,9 +459,9 @@ clean: cmvision/CMakeFiles/cmvision_gencpp.dir/clean
 # Target rules for target cmvision/CMakeFiles/cmvision_generate_messages.dir
 
 # All Build rule for target.
-cmvision/CMakeFiles/cmvision_generate_messages.dir/all: cmvision/CMakeFiles/cmvision_generate_messages_py.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages.dir/all: cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages.dir/all: cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/all
+cmvision/CMakeFiles/cmvision_generate_messages.dir/all: cmvision/CMakeFiles/cmvision_generate_messages_py.dir/all
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages.dir/depend
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles 
@@ -496,9 +496,9 @@ clean: cmvision/CMakeFiles/cmvision_generate_messages.dir/clean
 # Target rules for target cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir
 
 # All Build rule for target.
+cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blobs.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blob.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blobs.dir/all
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/depend
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  5 6
@@ -529,9 +529,9 @@ clean: cmvision/CMakeFiles/cmvision_generate_messages_cpp.dir/clean
 # Target rules for target cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir
 
 # All Build rule for target.
+cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blobs.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blob.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blobs.dir/all
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/depend
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  7 8
@@ -562,8 +562,8 @@ clean: cmvision/CMakeFiles/cmvision_generate_messages_lisp.dir/clean
 # Target rules for target cmvision/CMakeFiles/cmvision_generate_messages_py.dir
 
 # All Build rule for target.
-cmvision/CMakeFiles/cmvision_generate_messages_py.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blob.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages_py.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blobs.dir/all
+cmvision/CMakeFiles/cmvision_generate_messages_py.dir/all: cmvision/CMakeFiles/_cmvision_generate_messages_check_deps_Blob.dir/all
 cmvision/CMakeFiles/cmvision_generate_messages_py.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/all
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages_py.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages_py.dir/depend
 	$(MAKE) -f cmvision/CMakeFiles/cmvision_generate_messages_py.dir/build.make cmvision/CMakeFiles/cmvision_generate_messages_py.dir/build
@@ -660,7 +660,7 @@ clean: cmvision/CMakeFiles/cmvision_genpy.dir/clean
 cmvision/CMakeFiles/colorgui.dir/all:
 	$(MAKE) -f cmvision/CMakeFiles/colorgui.dir/build.make cmvision/CMakeFiles/colorgui.dir/depend
 	$(MAKE) -f cmvision/CMakeFiles/colorgui.dir/build.make cmvision/CMakeFiles/colorgui.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  12 13 14
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  13 14 15
 	@echo "Built target colorgui"
 .PHONY : cmvision/CMakeFiles/colorgui.dir/all
 
@@ -1154,6 +1154,56 @@ clean: cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Directory level rules for directory color_tracking
+
+# Convenience name for "all" pass in the directory.
+color_tracking/all: color_tracking/CMakeFiles/color_tracking_node.dir/all
+.PHONY : color_tracking/all
+
+# Convenience name for "clean" pass in the directory.
+color_tracking/clean: color_tracking/CMakeFiles/color_tracking_node.dir/clean
+.PHONY : color_tracking/clean
+
+# Convenience name for "preinstall" pass in the directory.
+color_tracking/preinstall:
+.PHONY : color_tracking/preinstall
+
+#=============================================================================
+# Target rules for target color_tracking/CMakeFiles/color_tracking_node.dir
+
+# All Build rule for target.
+color_tracking/CMakeFiles/color_tracking_node.dir/all:
+	$(MAKE) -f color_tracking/CMakeFiles/color_tracking_node.dir/build.make color_tracking/CMakeFiles/color_tracking_node.dir/depend
+	$(MAKE) -f color_tracking/CMakeFiles/color_tracking_node.dir/build.make color_tracking/CMakeFiles/color_tracking_node.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  12
+	@echo "Built target color_tracking_node"
+.PHONY : color_tracking/CMakeFiles/color_tracking_node.dir/all
+
+# Include target in all.
+all: color_tracking/CMakeFiles/color_tracking_node.dir/all
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+color_tracking/CMakeFiles/color_tracking_node.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 color_tracking/CMakeFiles/color_tracking_node.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles 0
+.PHONY : color_tracking/CMakeFiles/color_tracking_node.dir/rule
+
+# Convenience name for target.
+color_tracking_node: color_tracking/CMakeFiles/color_tracking_node.dir/rule
+.PHONY : color_tracking_node
+
+# clean rule for target.
+color_tracking/CMakeFiles/color_tracking_node.dir/clean:
+	$(MAKE) -f color_tracking/CMakeFiles/color_tracking_node.dir/build.make color_tracking/CMakeFiles/color_tracking_node.dir/clean
+.PHONY : color_tracking/CMakeFiles/color_tracking_node.dir/clean
+
+# clean rule for target.
+clean: color_tracking/CMakeFiles/color_tracking_node.dir/clean
+.PHONY : clean
+
+#=============================================================================
 # Directory level rules for directory turtlebot_follower
 
 # Convenience name for "all" pass in the directory.
@@ -1596,44 +1646,44 @@ clean: turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/clean
 # Target rules for target turtlebot_follower/CMakeFiles/turtlebot_follower.dir
 
 # All Build rule for target.
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/geometry_msgs_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/sensor_msgs_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/roscpp_generate_messages_py.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/sensor_msgs_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/geometry_msgs_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/geometry_msgs_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/geometry_msgs_generate_messages_lisp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/roscpp_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/nodelet_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/dynamic_reconfigure_gencfg.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/nodelet_generate_messages_lisp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/bond_generate_messages_cpp.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/nodelet_generate_messages_cpp.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/bond_generate_messages_lisp.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/bond_generate_messages_py.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_py.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_lisp.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/std_srvs_generate_messages_cpp.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/std_srvs_generate_messages_lisp.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/std_srvs_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_py.dir/all
 turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/turtlebot_msgs_generate_messages_lisp.dir/all
-turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/all
+turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all: turtlebot_follower/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/all
 	$(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/depend
 	$(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  17
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  18
 	@echo "Built target turtlebot_follower"
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower.dir/all
 
@@ -1668,7 +1718,7 @@ clean: turtlebot_follower/CMakeFiles/turtlebot_follower.dir/clean
 turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/all:
 	$(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/depend
 	$(MAKE) -f turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build.make turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  18
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/turtlebot/hri_project/turtlebot_ds/build/CMakeFiles  19
 	@echo "Built target turtlebot_follower_gencfg"
 .PHONY : turtlebot_follower/CMakeFiles/turtlebot_follower_gencfg.dir/all
 
