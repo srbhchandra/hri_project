@@ -110,7 +110,7 @@ void CMVisionColorBlobFinder::imageCB(const sensor_msgs::ImageConstPtr& msg)
 	CvSize size;
 
 	const sensor_msgs::Image img = *msg;
-
+        //ROS_INFO("Running CMVision Within HRI Project.");
 	// Timing
 	// struct timeval timeofday;
 	// gettimeofday(&timeofday,NULL);

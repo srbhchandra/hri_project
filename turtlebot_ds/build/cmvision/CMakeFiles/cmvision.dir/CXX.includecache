@@ -44,14 +44,6 @@ cmvision/Blob.h
 
 /home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/capture.h
 
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/cmvision.cc
-cmvision.h
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/cmvision.h
-string.h
--
-strings.h
--
-
 /home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/cmvision.h
 stdlib.h
 -
@@ -91,12 +83,6 @@ stdlib.h
 -
 stdio.h
 -
-
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/main.cpp
-ros/ros.h
--
-cmvision_color_blob_finder.h
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/cmvision_color_blob_finder.h
 
 /opt/ros/indigo/include/XmlRpcDecl.h
 ros/macros.h

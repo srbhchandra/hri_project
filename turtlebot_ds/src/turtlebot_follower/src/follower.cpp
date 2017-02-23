@@ -87,6 +87,9 @@ private:
   //bool object_found;
   double object_found;
   double object_found_steps;
+  double obstacle_found;
+  double sum_linear_obstacle_found;
+
   // Service for start/stop following
   ros::ServiceServer switch_srv_;
 
@@ -129,12 +132,14 @@ private:
     z = 1e6;
     cent_x = 0;
     prev_cent_x = 0;
-    max_area = -1;
+    max_area = 0;
     max_index = -1;
-    max_prev_area = -1;
+    max_prev_area = 0;
     max_prev_index = -1;
     object_found = 0;//false;
     object_found_steps = 1;//0.2;
+    obstacle_found = 0;
+    sum_linear_obstacle_found = 0;
   }
 
   void reconfigure(turtlebot_follower::FollowerConfig &config, uint32_t level)
@@ -149,30 +154,33 @@ private:
     x_scale_ = config.x_scale;
   }
 
-  void rotate(double radians)
+  void translate_and_rotate(double translation, double rotation_radians)
   {
     geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-    cmd->angular.z = radians;
+    cmd->linear.x  = translation;
+    cmd->angular.z = rotation_radians;
+    ROS_INFO("translate_and_rotate:: cmd->linear.x = %f   cmd->angular.z = %f", cmd->linear.x, cmd->angular.z);
     cmdpub_.publish(cmd);
   }
 
   void blobsCallBack (const cmvision::Blobs& blobsIn)
   {
-    int area, i;
-    ROS_INFO("Num Blob Count = %d", blobsIn.blob_count);
+    int area = 0, i = 0;
+    double linear_x = 0, angular_z = 0;
+    ROS_INFO("\nNum Blob Count = %d", blobsIn.blob_count);
 
-    if ( z > max_z_ || blobsIn.blob_count == 0)
+    /* Object is not found - rotate */
+    if ( (obstacle_found == 0) && (z > max_z_ || blobsIn.blob_count == 0))
     {
-      if (object_found == 1)
-        ROS_INFO("ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      rotate(-0.4);
-      return;
+        object_found = 0;
+        translate_and_rotate(0, -0.4);
+        return;
     } 
 
     max_prev_area = max_area;
-    max_area      = -1;
+    max_area      = 0;
 
-    // Find the largest region.
+    // Find max_area.
     for (i = 0; i < blobsIn.blob_count; i++) 
     {
       if (blobsIn.blobs[i].red == 0 && blobsIn.blobs[i].green == 0 && blobsIn.blobs[i].blue == 255) 
@@ -186,43 +194,63 @@ private:
         }
       }
     }
+ 
+    ROS_INFO("Max area at [%d] = %d", max_index, max_area);
+    ROS_INFO("object_found = %f, obstacle_found = %f", object_found, obstacle_found);
 
-    if (object_found == 1)
+    /* Take the centroid. */
+    prev_cent_x = cent_x;
+    if (blobsIn.blob_count > 0)
     {
-      // Take the centroid.
-      prev_cent_x = cent_x;
-      cent_x = blobsIn.blobs[max_index].x;
-      int diff_x = cent_x - prev_cent_x; 
+	    cent_x = blobsIn.blobs[max_index].x;
+    }
+    int diff_x = cent_x - prev_cent_x; 
+    ROS_INFO("cent_x = %d, diff_x = %d", cent_x, diff_x);
+    
+    /* Position the bot to the centroid. */
+    angular_z = -diff_x * x_scale_;
 
-      ROS_INFO("Max area at [%d] = %d", max_index, max_area);
-      ROS_INFO("cent_x = %d, diff_x = %d", cent_x, diff_x);
-      
-      geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-      // Position the bot to the centroid.
-//      cmd->angular.z = -diff_x * x_scale_;
-      cmd->linear.x = (z - goal_z_) * z_scale_;
-      ROS_INFO("Blue blob found::: cmd->linear.x = %f   cmd->angular.z = %f", cmd->linear.x, cmd->angular.z);
-      cmdpub_.publish(cmd);
-      if (cmd->linear.x == 0)
+    /* Object is not found - rotate */
+    if (object_found == 0)
+    {
+      if ( max_area > max_prev_area)
       {
-        object_found = 0;//false;
+        translate_and_rotate(0, -0.4);
+        //translate_and_rotate(0, angular_z);
       }
-      return;
+      else
+      {
+        object_found = object_found + object_found_steps;// = true;
+      }
+    } else
+    /* Object is found */
+    {
+      linear_x = (z - goal_z_) * z_scale_;
+
+      if (linear_x <= 0.03)
+      {
+        ROS_INFO("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Obstacle Found");
+        obstacle_found = 1;
+        sum_linear_obstacle_found = 0;
+        //translate_and_rotate(linear_x, 0.7);
+        translate_and_rotate(0, 0.5);
+      }
+      else
+      {
+        ROS_INFO("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ Obstacle NOT Found");
+        translate_and_rotate(linear_x, 0);
+        if (obstacle_found == 1)
+        {
+	        sum_linear_obstacle_found += linear_x;
+	        if (sum_linear_obstacle_found > 2.5)
+	        {
+	        	object_found = 0;
+	        	obstacle_found = 0;
+	        }
+        }
+      }
     }
 
-    if ( max_area > max_prev_area)
-    {
-      rotate(-0.4);
-      if (object_found > 0)
-        object_found = object_found + object_found_steps;
-      return;
-    }
-    else
-    {
-      rotate(0.4);
-      object_found = object_found + object_found_steps;// = true;
-      return;
-    }
   }
 
   /*!
@@ -295,12 +323,12 @@ float temp;
       y /= n;
       if(z > max_z_){
         ROS_INFO_THROTTLE(1, "Centroid too far away %f, stopping the robot\n", z);
-	ROS_INFO_THROTTLE(1, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
+  ROS_INFO_THROTTLE(1, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
         if (enabled_)
         {
         geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-	cmd->angular.z = -0.4;
-	cmdpub_.publish(cmd);
+  cmd->angular.z = -0.4;
+  cmdpub_.publish(cmd);
         }
         return;
       }
@@ -309,48 +337,48 @@ float temp;
       publishMarker(x, y, z);
       if (enabled_)
       {
-	temp = fabs(x * x_scale_);
+  temp = fabs(x * x_scale_);
 //ROS_INFO_THROTTLE(1, "x * x_scale_ = %f", temp);
 
-	if (temp < 0.03) {
-		ROTATE_FLAG:
-	        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-		if (rotate_counter < 25) {
+  if (temp < 0.03) {
+    ROTATE_FLAG:
+          geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+    if (rotate_counter < 25) {
 ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
-		cmd->angular.z = -1.8;
-			rotate_flag = true;
-			rotate_counter ++;
-		} else if (rotate_counter < 50) {
+    cmd->angular.z = -1.8;
+      rotate_flag = true;
+      rotate_counter ++;
+    } else if (rotate_counter < 50) {
 ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
-		cmd->angular.z = -1.8;
-			rotate_flag = true;
-			rotate_counter ++;
-		} else if (rotate_counter < 75) {
+    cmd->angular.z = -1.8;
+      rotate_flag = true;
+      rotate_counter ++;
+    } else if (rotate_counter < 75) {
 ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
-		cmd->angular.z = -1.8;
-			rotate_flag = true;
-			rotate_counter ++;
-		} else if (rotate_counter < 100) {
+    cmd->angular.z = -1.8;
+      rotate_flag = true;
+      rotate_counter ++;
+    } else if (rotate_counter < 100) {
 ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
-		cmd->angular.z = -1.8;
-			rotate_flag = true;
-			rotate_counter ++;
-		} else {
+    cmd->angular.z = -1.8;
+      rotate_flag = true;
+      rotate_counter ++;
+    } else {
 ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
-			rotate_flag = false;
-			rotate_counter = 0;
-		}
-	        cmdpub_.publish(cmd);
+      rotate_flag = false;
+      rotate_counter = 0;
+    }
+          cmdpub_.publish(cmd);
 
-	} else {		
+  } else {    
 
-	        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-		cmd->linear.x = (z - goal_z_) * z_scale_;
-		cmd->angular.z = -x * x_scale_;
-	        cmdpub_.publish(cmd);
-	}
+          geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+    cmd->linear.x = (z - goal_z_) * z_scale_;
+    cmd->angular.z = -x * x_scale_;
+          cmdpub_.publish(cmd);
+  }
 
-//	return;
+//  return;
       }
     }
     else
@@ -360,14 +388,15 @@ ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
 
       if (enabled_)
       {
-	geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-	cmdpub_.publish(cmd);
+  geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+  cmdpub_.publish(cmd);
       }
     }
 
     publishBbox();
   }
 */
+
   void imagecb(const sensor_msgs::ImageConstPtr& depth_msg)
   {
 
@@ -415,6 +444,7 @@ ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
        }
      }
     }
+
 //    ROS_INFO("Image cb:: Updating z = %f", z);
     //If there are points, find the centroid and calculate the command goal.
     //If there are no points, simply publish a stop goal.
@@ -457,8 +487,8 @@ ROS_INFO_THROTTLE(1, "rotate_counter = %d", rotate_counter);
 
       if (enabled_)
       {
-        geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
-        cmdpub_.publish(cmd);
+        //geometry_msgs::TwistPtr cmd(new geometry_msgs::Twist());
+        //cmdpub_.publish(cmd);
       }
     }
     publishBbox();

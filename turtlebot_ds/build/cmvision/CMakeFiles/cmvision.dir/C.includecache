@@ -6,15 +6,3 @@
 
 #IncludeRegexTransform: 
 
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/conversions.c
-string.h
--
-conversions.h
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/conversions.h
-
-/home/turtlebot/hri_project/turtlebot_ds/src/cmvision/src/conversions.h
-stdlib.h
--
-stdio.h
--
-
