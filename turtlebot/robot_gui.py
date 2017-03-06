@@ -14,12 +14,12 @@ from move_base_msgs.msg import *
 import time
 from PyQt4 import QtCore, QtGui
 from actionlib_msgs.msg import *
-from geometry_msgs.msg import Pose, Point, Quaternion
+from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
 
 #Change to chair positions
 table_position = dict()
 table_position[0] = (-0.465, 0.37, 0.010, 0, 0, 0.998, 0.069)
-table_position[1] = (0.599, 1.03, 0.010, 0, 0, 1.00, -0.020)
+#table_position[1] = (0.599, 1.03, 0.010, 0, 0, 1.00, -0.020)
 table_position[2] = (4.415, 0.645, 0.010, 0, 0, -0.034, 0.999)
 table_position[3] = (7.409, 0.812, 0.010, 0, 0, -0.119, 0.993)
 table_position[4] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
@@ -29,8 +29,10 @@ table_position[7] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 table_position[8] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 table_position[9] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 
-table_position[1] = (-4.98, -2.11, -0.0, 0.000, 0.000, 0.000, 1.000)
-
+table_position[1] = (-6.215, -1.463, 0.0, 0.000, 0.000, 0.000, 1.000)
+#start_position    = (0.197, -0.211, -0.0, 0.000, 0.000, 0.000, 1.000)
+#start_position    = (0.202657103539, -0.244970560074, -0.0, 0.000, 0.000, -0.879288454445, 0.476289632345)
+start_position    = (0.0804803371429, -0.39985704422, -0.0, 0.000, 0.000, -0.886831887211, 0.462092202731)
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -119,6 +121,34 @@ class Ui_Form(object):
 		QtCore.QMetaObject.connectSlotsByName(Form)
 
 
+	def set_initial_pose(self):
+		self.start_pos = PoseWithCovarianceStamped()
+		self.pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
+#		self.pub_amcl = rospy.Publisher('/amcl_pose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
+
+		self.start_pos.pose.pose.position.x=float(start_position[0])
+		self.start_pos.pose.pose.position.y=float(start_position[1])
+		self.start_pos.pose.pose.position.z=float(start_position[2])
+		self.start_pos.pose.pose.orientation.x = float(start_position[3])
+		self.start_pos.pose.pose.orientation.y= float(start_position[4])
+		self.start_pos.pose.pose.orientation.z= float(start_position[5])
+		self.start_pos.pose.pose.orientation.w= float(start_position[6])
+		self.start_pos.pose.covariance[0]  = 0.25
+		self.start_pos.pose.covariance[7]  = 0.25
+		self.start_pos.pose.covariance[35] = 0.06853891945200942
+		self.start_pos.header.frame_id= 'map'
+		self.start_pos.header.stamp = rospy.Time.now()
+		time.sleep(2)
+		self.pub.publish(self.start_pos)
+#		self.pub_amcl.publish(self.start_pos)
+		time.sleep(2)
+		self.pub.publish(self.start_pos)
+#		self.pub_amcl.publish(self.start_pos)
+		time.sleep(2)
+		self.pub.publish(self.start_pos)
+#		self.pub_amcl.publish(self.start_pos)
+
+
 	def set_table_number(self):
 		self.table_no = self.spinBox.value()
 		self.current_table_position = table_position[self.table_no]
@@ -148,7 +178,7 @@ class Ui_Form(object):
 
 		self.client.send_goal(self.goal)
 
-		self.client.wait_for_result()
+#		self.client.wait_for_result()
 	#	rospy.loginfo(self.client.get_result())
 		# Allow TurtleBot up to 60 seconds to complete task
 		success = self.client.wait_for_result(rospy.Duration(60)) 
@@ -213,7 +243,7 @@ class WorkThread(QtCore.QThread):
 		while True:
 			time.sleep(0.3) # artificial time delay
 			self.emit( QtCore.SIGNAL('update(QString)'), " " ) 
-			print "WorkThread>> Updating values"
+			#print "WorkThread>> Updating values"
   		return
 
 
@@ -227,6 +257,8 @@ if __name__ == "__main__":
 	app  = QtGui.QApplication(sys.argv)
 	Form = QtGui.QWidget()
 	ui   = Ui_Form()
+	ui.set_initial_pose()
 	ui.setupUi(Form)
+	
 	Form.show()
 	sys.exit(app.exec_())
