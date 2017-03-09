@@ -1,4 +1,4 @@
-image: /home/turtlebot/new_map/my_map4.pgm
+image: /home/turtlebot/hri_project/maps/my_map4.pgm
 resolution: 0.050000
 origin: [-12.200000, -15.400000, 0.000000]
 negate: 0

@@ -67,6 +67,11 @@ class Ui_Form(object):
 		self.font_large.setBold(True)
 		self.font_large.setWeight(75)
 
+		self.font_red = QtGui.QFont()
+		self.font_red.setPointSize(large_font_size)
+		self.font_red.setBold(True)
+		self.font_red.setWeight(75)
+
 		self.box_width  = 200
 		self.box_height = 40
 		self.label_box_width  = self.box_width
@@ -203,6 +208,10 @@ class Ui_Form(object):
 		running_y = running_y + self.box_height + self.unrelated_gap_y
 		self.checkbox = self.create_check_box_ui(Form, "checkbox", self.left_box_x, running_y, "Parcel Placed")
 
+		# ############### Label to denote error ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.label_error = self.create_label_ui(self.Form, "label_error", self.left_box_x, running_y, "", 600, 25, self.font_red)
+		self.label_error.setStyleSheet('color: red')
 
 		# ------------- RIGHT SIDE OF GUI -------------
 		# ############### Bot Status ###############
@@ -249,12 +258,14 @@ class Ui_Form(object):
 		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
 		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
 		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
-		QtCore.QObject.connect(self.checkbox, QtCore.SIGNAL(_fromUtf8("clicked()")), self.parcel_placed)
+		QtCore.QObject.connect(self.checkbox, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_placed)
 		QtCore.QMetaObject.connectSlotsByName(Form)
 
 
 	def parcel_placed(self):
-		self.parcel_on_bot = True
+		self.parcel_on_bot = 1 - self.parcel_on_bot
+		if self.parcel_on_bot:
+			self.label_error.setText(_translate("Form", "", None))
 
 
 	def set_sender(self):
@@ -276,6 +287,7 @@ class Ui_Form(object):
 	def save_message(self):
 		self.message = self.temp_message
 		print "Message Recieved: ", self.message
+		self.label_error.setText(_translate("Form", "", None))
 
 
 	def reset_message(self):
@@ -311,11 +323,11 @@ class Ui_Form(object):
 		
 		self.current_position = AT_SOURCE
 		self.table_no = 0
-		self.current_table_position = 0
+		self.current_table_position = table_position[self.table_no]
 		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
 		self.goal = MoveBaseGoal()
 		self.parcel_on_bot = False
-
+		self.message = None
 
 	def set_table_number(self):
 		self.table_no = self.spinBox.value()
@@ -325,15 +337,19 @@ class Ui_Form(object):
 	def Go(self):
 		print "Go"
 		if self.current_position == AT_SOURCE:
-			self.goal.target_pose.pose.position.x=float(self.current_table_position[0])
-			self.goal.target_pose.pose.position.y=float(self.current_table_position[1])
-			self.goal.target_pose.pose.position.z=float(self.current_table_position[2])
+			if self.parcel_on_bot or self.message:
+				self.goal.target_pose.pose.position.x=float(self.current_table_position[0])
+				self.goal.target_pose.pose.position.y=float(self.current_table_position[1])
+				self.goal.target_pose.pose.position.z=float(self.current_table_position[2])
 
-			self.goal.target_pose.pose.orientation.x = float(self.current_table_position[3])
-			self.goal.target_pose.pose.orientation.y= float(self.current_table_position[4])
-			self.goal.target_pose.pose.orientation.z= float(self.current_table_position[5])
-			self.goal.target_pose.pose.orientation.w= float(self.current_table_position[6])
-			print "Go to destination"
+				self.goal.target_pose.pose.orientation.x = float(self.current_table_position[3])
+				self.goal.target_pose.pose.orientation.y= float(self.current_table_position[4])
+				self.goal.target_pose.pose.orientation.z= float(self.current_table_position[5])
+				self.goal.target_pose.pose.orientation.w= float(self.current_table_position[6])
+				print "Go to destination"
+			else:
+				self.label_error.setText(_translate("Form", "Need either a parcel or a message to deliver", None))
+				return
 		else:
 			self.goal.target_pose.pose.position.x=float(start_position[0])
 			self.goal.target_pose.pose.position.y=float(start_position[1])
@@ -361,7 +377,7 @@ class Ui_Form(object):
 				self.current_position = AT_SOURCE
 			else:
 				self.current_position = AT_DESTINATION
-				self.setup_destination_ui()
+				#self.setup_destination_ui()
 		else:
 			self.client.cancel_goal()
 
@@ -373,6 +389,7 @@ class Ui_Form(object):
 		self.progressBar.setProperty("value", battery_value)
 		self.label_4.setText(_fromUtf8(robot_status))
  
+
 	def setup_destination_ui(self):
 		# Complete Window
 		Form = self.Form
@@ -397,7 +414,7 @@ class Ui_Form(object):
 		# label
 		running_y = running_y + self.label_box_height + self.unrelated_gap_y
 		delivery_msg = "There is "
-		if self.parcel_on_bot && self.message:
+		if self.parcel_on_bot and self.message:
 			delivery_msg = delivery_msg + "a message and an item "
 		elif self.parcel_on_bot:
 			delivery_msg = delivery_msg + "an item "
@@ -468,18 +485,7 @@ class Ui_Form(object):
 			font=self.font_large)
 
 		#self.update_values()
-		self.connect_ui_callbacks(Form)
-
-
-	def connect_ui_callbacks(self, Form):
-		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
-		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_sender)
-		QtCore.QObject.connect(self.textbox_r, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_receiver)
-		QtCore.QObject.connect(self.textbox_m, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.save_temp_message)
-		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
-		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
-		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
-		QtCore.QMetaObject.connectSlotsByName(Form)
+#		self.connect_ui_callbacks(Form)
 
 	#def update_values(self):
 	  	#self.thread =  WorkThread() 
@@ -513,7 +519,7 @@ if __name__ == "__main__":
 	Form = QtGui.QWidget()
 	ui   = Ui_Form()
 	ui.set_initial_pose()
-	ui.initialize_ui()
+	ui.initialize_ui(Form)
 	ui.setup_source_ui(Form)
 	
 	Form.show()
