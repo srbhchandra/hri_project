@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'robot.ui'
-#
-# Created: Sat Feb 21 20:25:38 2015
-#	  by: PyQt4 UI code generator 4.10.4
-#
-# WARNING! All changes made in this file will be lost!
-
 import rospy
 import actionlib
 from move_base_msgs.msg import *
@@ -57,159 +49,240 @@ except AttributeError:
 	def _translate(context, text, disambig):
 		return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_Form(object):
 
-	def setupUi(self, Form):
+	def initialize_ui(self, Form):
+		self.Form = Form
+		# Create default font
+		default_font_size = 12
+		large_font_size   = 18
+		self.font_text = QtGui.QFont()
+		self.font_text.setPointSize(default_font_size)
+		self.font_text.setBold(True)
+		self.font_text.setWeight(75)
+
+		self.font_large = QtGui.QFont()
+		self.font_large.setPointSize(large_font_size)
+		self.font_large.setBold(True)
+		self.font_large.setWeight(75)
+
+		self.box_width  = 200
+		self.box_height = 40
+		self.label_box_width  = self.box_width
+		self.label_box_height = 25
+		self.start_y    = 20
+		self.related_gap_y    = 10
+		self.unrelated_gap_y  = 20
+		self.gap_x            = 30
+		self.left_box_x  = 20
+		self.right_box_x = self.left_box_x + max(self.box_width, self.label_box_width) + self.gap_x
+		self.msg_box_width  = 300
+		self.msg_box_height = 2*(self.box_height + self.label_box_height + self.related_gap_y) + self.unrelated_gap_y
+		self.window_width  = 580
+		self.window_height = 500
+
+
+	def set_ui_params(self, ui_unit, start_x, start_y, length_x, length_y, name, text, font):
+		ui_unit.setGeometry(QtCore.QRect(start_x, start_y, length_x, length_y))
+		ui_unit.setObjectName(_fromUtf8(name))
+		ui_unit.setFont(font)
+		if text is not None:
+			ui_unit.setText(_translate("Form", text, None))
+
+
+	def create_push_button_ui(self, Form, push_button_name, start_x, start_y, text, length_x=0, length_y=0, font=None):
+		push_button = QtGui.QPushButton(Form)
+		if length_x == 0:
+			length_x = self.box_width
+		if length_y == 0:
+			length_y = self.box_height
+		if font == None:
+			font = self.font_text
+		self.set_ui_params(push_button, start_x, start_y, length_x, length_y, push_button_name, text, font)		
+		return push_button
+
+
+	def create_check_box_ui(self, Form, check_box_name, start_x, start_y, text, length_x=0, length_y=0, font=None):
+		checkbox = QtGui.QCheckBox(Form)
+		if length_x == 0:
+			length_x = self.box_width
+		if length_y == 0:
+			length_y = self.box_height
+		if font == None:
+			font = self.font_large
+		self.set_ui_params(checkbox, start_x, start_y, length_x, length_y, check_box_name, text, font)		
+		return checkbox
+
+
+	def create_spin_box_ui(self, Form, spin_box_name, start_x, start_y, max=9999, length_x=0, length_y=0, font=None):
+		spinBox = QtGui.QSpinBox(Form)
+		if length_x == 0:
+			length_x = self.box_width
+		if length_y == 0:
+			length_y = self.box_height
+		if font == None:
+			font = self.font_large
+		self.set_ui_params(spinBox, start_x, start_y, length_x, length_y, spin_box_name, None, font)			
+		spinBox.setMaximum(max)
+		return spinBox
+
+
+	def create_label_ui(self, Form, label_name, start_x, start_y, text, length_x=0, length_y=0, font=None):
+		label = QtGui.QLabel(Form)
+		if length_x == 0:
+			length_x = self.label_box_width
+		if length_y == 0:
+			length_y = self.label_box_height
+		if font == None:
+			font = self.font_text
+		self.set_ui_params(label, start_x, start_y, length_x, length_y, label_name, text, font)		
+		return label
+
+
+	def create_text_box_ui(self, Form, text_box_name, start_x, start_y, length_x=0, length_y=0, font=None):
+		#text_box = QtGui.QLineEdit(Form)
+		text_box = QtGui.QTextEdit(Form)		
+		if length_x == 0:
+			length_x = self.box_width
+		if length_y == 0:
+			length_y = self.box_height
+		if font == None:
+			font = self.font_large
+		self.set_ui_params(text_box, start_x, start_y, length_x, length_y, text_box_name, None, font)		
+		return text_box
+
+
+	def setup_source_ui(self, Form):
+		# Complete Window
 		Form.setObjectName(_fromUtf8("Form"))
-#		Form.resize(376, 338)
-		Form.resize(800, 800)
+		Form.resize(self.window_width, self.window_height)
+		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
 
-		# Chair No text box
-		self.spinBox = QtGui.QSpinBox(Form)
-		self.spinBox.setGeometry(QtCore.QRect(20, 160, 161, 81))
-		font = QtGui.QFont()
-		font.setPointSize(35)
-		font.setBold(True)
-		font.setWeight(75)
-		self.spinBox.setFont(font)
-		self.spinBox.setMaximum(9999)
-		self.spinBox.setObjectName(_fromUtf8("spinBox"))
+		# ------------- LEFT SIDE OF GUI -------------
+		# ############### Battery level ###############
+		# label
+		running_y = self.start_y
+		self.label_battery = self.create_label_ui(Form, "label_battery", self.left_box_x, running_y, "Battery Level")
 		
-		# label is "Room/Chair No" text
-		self.label = QtGui.QLabel(Form)
-		self.label.setGeometry(QtCore.QRect(20, 120, 130, 21))
-		font = QtGui.QFont()
-		font.setPointSize(12)
-		font.setBold(True)
-		font.setWeight(75)
-		self.label.setFont(font)
-		self.label.setObjectName(_fromUtf8("label"))
-
-		# Senders Name text box
-		# Create textbox
-		self.textbox_s = QtGui.QLineEdit(Form)
-		self.textbox_s.setGeometry(QtCore.QRect(20, 300, 161, 81))
-		font = QtGui.QFont()
-		font.setPointSize(15)
-		font.setBold(True)
-		font.setWeight(75)
-		self.textbox_s.setFont(font)
-		self.textbox_s.setObjectName(_fromUtf8("textbox_s"))
-		
-		# label:"Sender's Name" text
-		self.label_s = QtGui.QLabel(Form)
-		self.label_s.setGeometry(QtCore.QRect(20, 260, 130, 21))
-		font = QtGui.QFont()
-		font.setPointSize(12)
-		font.setBold(True)
-		font.setWeight(75)
-		self.label_s.setFont(font)
-		self.label_s.setObjectName(_fromUtf8("label_s"))
-
-		# Receivers Name text box
-		self.spinBox_r = QtGui.QSpinBox(Form)
-		self.spinBox_r.setGeometry(QtCore.QRect(20, 440, 161, 81))
-		font = QtGui.QFont()
-		font.setPointSize(35)
-		font.setBold(True)
-		font.setWeight(75)
-		self.spinBox_r.setFont(font)
-		self.spinBox_r.setMaximum(9999)
-		self.spinBox_r.setObjectName(_fromUtf8("spinBox_r"))
-		
-		# label:"Receiver's Name" text
-		self.label_r = QtGui.QLabel(Form)
-		self.label_r.setGeometry(QtCore.QRect(20, 400, 130, 21))
-		font = QtGui.QFont()
-		font.setPointSize(12)
-		font.setBold(True)
-		font.setWeight(75)
-		self.label_r.setFont(font)
-		self.label_r.setObjectName(_fromUtf8("label_r"))
-
-		self.pushButton_go = QtGui.QPushButton(Form)
-		self.pushButton_go.setGeometry(QtCore.QRect(220, 240, 131, 41))
-		self.pushButton_go.setObjectName(_fromUtf8("pushButton"))
-		self.pushButton_sub_msg = QtGui.QPushButton(Form)
-		self.pushButton_sub_msg.setGeometry(QtCore.QRect(220, 140, 131, 41))
-		self.pushButton_sub_msg.setObjectName(_fromUtf8("pushButton_sub_msg"))
-		self.pushButton_res_msg = QtGui.QPushButton(Form)
-		self.pushButton_res_msg.setGeometry(QtCore.QRect(220, 190, 131, 41))
-		self.pushButton_res_msg.setObjectName(_fromUtf8("pushButton_res_msg"))
+		# Output progress bar
+		running_y = running_y + self.label_box_height + self.related_gap_y
 		self.progressBar = QtGui.QProgressBar(Form)
-		self.progressBar.setGeometry(QtCore.QRect(20, 60, 118, 23))
+		self.progressBar.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
 		self.progressBar.setProperty("value", 0)
 		self.progressBar.setObjectName(_fromUtf8("progressBar"))
-		self.label_2 = QtGui.QLabel(Form)
-		self.label_2.setGeometry(QtCore.QRect(20, 20, 111, 21))
-		font = QtGui.QFont()
-		font.setBold(True)
-		font.setWeight(75)
-		self.label_2.setFont(font)
-		self.label_2.setObjectName(_fromUtf8("label_2"))
-		self.label_3 = QtGui.QLabel(Form)
-		self.label_3.setGeometry(QtCore.QRect(200, 20, 111, 21))
-		font = QtGui.QFont()
-		font.setBold(True)
-		font.setWeight(75)
-		self.label_3.setFont(font)
-		self.label_3.setObjectName(_fromUtf8("label_3"))
-		self.label_4 = QtGui.QLabel(Form)
-		self.label_4.setGeometry(QtCore.QRect(190, 60, 131, 31))
-		font = QtGui.QFont()
-		font.setBold(True)
-		font.setWeight(75)
-		self.label_4.setFont(font)
-		self.label_4.setText(_fromUtf8(""))
-		self.label_4.setObjectName(_fromUtf8("label_4"))
 
-		self.table_no = 0
-		self.current_table_position = 0
-		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-		self.goal = MoveBaseGoal()
+		# ############### Room/Chair No ###############
+		# label
+		running_y = running_y + self.label_box_height + self.unrelated_gap_y
+		self.label = self.create_label_ui(Form, "label", self.left_box_x, running_y, "Chair No")
+		
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.spinBox = self.create_spin_box_ui(Form, "spinBox", self.left_box_x, running_y, max=4299)
+
+		# ############### Sender's Name ###############
+		# label
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.label_s = self.create_label_ui(Form, "label_s", self.left_box_x, running_y, "Sender's Name")
+		
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_s = self.create_text_box_ui(Form, "textbox_s", self.left_box_x, running_y)
+		
+		# ############### Receiver's Name ###############
+		# label
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.label_r = self.create_label_ui(Form, "label_r", self.left_box_x, running_y, "Receiver's Name")
+
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_r = self.create_text_box_ui(Form, "textbox_r", self.left_box_x, running_y)
+
+		# ############### Parcel Placed Check box ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.checkbox = self.create_check_box_ui(Form, "checkbox", self.left_box_x, running_y, "Parcel Placed")
+
+
+		# ------------- RIGHT SIDE OF GUI -------------
+		# ############### Bot Status ###############
+		running_y = self.start_y
+		self.label_status = self.create_label_ui(Form, "label_status", self.right_box_x, running_y, "Bot Status: Active")
+
+		# ############### Message ###############
+		# label
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		running_y = running_y + self.label_box_height + self.unrelated_gap_y
+		self.label_m = self.create_label_ui(Form, "label_m", self.right_box_x, running_y, "Message")
+
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_m = self.create_text_box_ui(Form, "textbox_m", self.right_box_x, running_y, 
+			self.msg_box_width, self.msg_box_height)
+
+		# Message related buttons
+		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
+		push_button_gap = 5
+		push_button_len = (self.msg_box_width - 4*push_button_gap)/2
+		
+		self.pushButton_sub_msg = self.create_push_button_ui(Form, "pushButton_sub_msg", 
+			self.right_box_x + push_button_gap, running_y, "Submit Message", length_x=push_button_len)
+		
+		self.pushButton_res_msg = self.create_push_button_ui(Form, "pushButton_res_msg", 
+			self.right_box_x + push_button_len + 2*push_button_gap, running_y, "Reset Message", length_x=push_button_len)
+
+		# ############### Go Button ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.pushButton_go = self.create_push_button_ui(Form, "pushButton", 
+			self.right_box_x + push_button_gap, running_y, "Go", length_x=2*push_button_len + push_button_gap, 
+			font=self.font_large)
 
 		#self.update_values()
+		self.connect_ui_callbacks(Form)
 
-		self.retranslateUi(Form)
+
+	def connect_ui_callbacks(self, Form):
 		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
-		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("valueChanged(char)")), self.set_sender)
-		QtCore.QObject.connect(self.spinBox_r, QtCore.SIGNAL(_fromUtf8("valueChanged(char)")), self.set_receiver)
-		
+		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_sender)
+		QtCore.QObject.connect(self.textbox_r, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_receiver)
+		QtCore.QObject.connect(self.textbox_m, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.save_temp_message)
 		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
 		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
 		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
-		
+		QtCore.QObject.connect(self.checkbox, QtCore.SIGNAL(_fromUtf8("clicked()")), self.parcel_placed)
 		QtCore.QMetaObject.connectSlotsByName(Form)
 
 
-	def retranslateUi(self, Form):
-		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
-		self.label.setText(_translate("Form", "Room/Chair No", None))
-		self.label_s.setText(_translate("Form", "Sender's Name", None))
-		self.label_r.setText(_translate("Form", "Receiver's Name", None))
-		self.pushButton_go.setText(_translate("Form", "Go", None))
-		self.pushButton_sub_msg.setText(_translate("Form", "Submit Message", None))
-		self.pushButton_res_msg.setText(_translate("Form", "Reset Message", None))
-		self.label_2.setText(_translate("Form", "Battery Level", None))
-		self.label_3.setText(_translate("Form", "Robot Status", None))
+	def parcel_placed(self):
+		self.parcel_on_bot = True
 
 
 	def set_sender(self):
-		self.sender_name = self.textbox_s.value()
+		#self.sender_name = self.textbox_s.text()
+		self.sender_name = self.textbox_s.toPlainText()		
 		print "Sender is :", self.sender_name
 
 
 	def set_receiver(self):
-		self.receiver_name = self.spinBox_r.value()
+		self.receiver_name = self.textbox_r.toPlainText()
 		print "Receiver is :", self.receiver_name
 
 
+	def save_temp_message(self):
+		self.temp_message = self.textbox_m.toPlainText()
+		print "Temp message is :", self.temp_message
+
+
 	def save_message(self):
-		print "Message Recieved!!!"
+		self.message = self.temp_message
+		print "Message Recieved: ", self.message
 
 
 	def reset_message(self):
-		print "Message Resetted!!!"
+		self.message = None
+		self.temp_message = None
+		self.textbox_m.clear()
+		print "Message Resetted!!! ", self.message
 
 
 	def set_initial_pose(self):
@@ -235,8 +308,14 @@ class Ui_Form(object):
 		self.pub.publish(self.start_pos)
 #		time.sleep(2)
 		self.pub.publish(self.start_pos)
+		
 		self.current_position = AT_SOURCE
-	
+		self.table_no = 0
+		self.current_table_position = 0
+		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+		self.goal = MoveBaseGoal()
+		self.parcel_on_bot = False
+
 
 	def set_table_number(self):
 		self.table_no = self.spinBox.value()
@@ -245,8 +324,6 @@ class Ui_Form(object):
 
 	def Go(self):
 		print "Go"
-		print "Waiting for server"
-	#	self.client.wait_for_server()
 		if self.current_position == AT_SOURCE:
 			self.goal.target_pose.pose.position.x=float(self.current_table_position[0])
 			self.goal.target_pose.pose.position.y=float(self.current_table_position[1])
@@ -284,19 +361,9 @@ class Ui_Form(object):
 				self.current_position = AT_SOURCE
 			else:
 				self.current_position = AT_DESTINATION
+				self.setup_destination_ui()
 		else:
 			self.client.cancel_goal()
-
-
-	def Cancel(self):
-		print "Cancel"
-		self.client.cancel_all_goals()
-
-
-	def Home(self):
-		print "Home"
-		self.current_table_position = table_position[0]
-		self.Go()
 
 
 	def add(self,text):
@@ -306,13 +373,118 @@ class Ui_Form(object):
 		self.progressBar.setProperty("value", battery_value)
 		self.label_4.setText(_fromUtf8(robot_status))
  
+	def setup_destination_ui(self):
+		# Complete Window
+		Form = self.Form
+		Form.setObjectName(_fromUtf8("Form"))
+		Form.resize(self.window_width, self.window_height)
+		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
+
+		# ------------- LEFT SIDE OF GUI -------------
+		# ############### Battery level ###############
+		# label
+		running_y = self.start_y
+		self.label_battery = self.create_label_ui(Form, "label_battery", self.left_box_x, running_y, "Battery Level")
+		
+		# Output progress bar
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.progressBar = QtGui.QProgressBar(Form)
+		self.progressBar.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
+		self.progressBar.setProperty("value", 0)
+		self.progressBar.setObjectName(_fromUtf8("progressBar"))
+
+		# ############### Room/Chair No ###############
+		# label
+		running_y = running_y + self.label_box_height + self.unrelated_gap_y
+		delivery_msg = "There is "
+		if self.parcel_on_bot && self.message:
+			delivery_msg = delivery_msg + "a message and an item "
+		elif self.parcel_on_bot:
+			delivery_msg = delivery_msg + "an item "
+		elif self.message:
+			delivery_msg = delivery_msg + "a message "
+		delivery_msg = delivery_msg + "for " + self.receiver_name + " from " + self.sender_name
+
+		self.label_delivery = self.create_label_ui(Form, "label", self.left_box_x, running_y, delivery_msg)
+		
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.spinBox = self.create_spin_box_ui(Form, "spinBox", self.left_box_x, running_y, max=4299)
+
+		# ############### Sender's Name ###############
+		# label
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.label_s = self.create_label_ui(Form, "label_s", self.left_box_x, running_y, "Sender's Name")
+		
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_s = self.create_text_box_ui(Form, "textbox_s", self.left_box_x, running_y)
+		
+		# ############### Receiver's Name ###############
+		# label
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.label_r = self.create_label_ui(Form, "label_r", self.left_box_x, running_y, "Receiver's Name")
+
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_r = self.create_text_box_ui(Form, "textbox_r", self.left_box_x, running_y)
+
+		# ############### Parcel Placed Check box ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.checkbox = self.create_check_box_ui(Form, "checkbox", self.left_box_x, running_y, "Parcel Placed")
+
+
+		# ------------- RIGHT SIDE OF GUI -------------
+		# ############### Bot Status ###############
+		running_y = self.start_y
+		self.label_status = self.create_label_ui(Form, "label_status", self.right_box_x, running_y, "Bot Status: Active")
+
+		# ############### Message ###############
+		# label
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		running_y = running_y + self.label_box_height + self.unrelated_gap_y
+		self.label_m = self.create_label_ui(Form, "label_m", self.right_box_x, running_y, "Message")
+
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_m = self.create_text_box_ui(Form, "textbox_m", self.right_box_x, running_y, 
+			self.msg_box_width, self.msg_box_height)
+
+		# Message related buttons
+		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
+		push_button_gap = 5
+		push_button_len = (self.msg_box_width - 4*push_button_gap)/2
+		
+		self.pushButton_sub_msg = self.create_push_button_ui(Form, "pushButton_sub_msg", 
+			self.right_box_x + push_button_gap, running_y, "Submit Message", length_x=push_button_len)
+		
+		self.pushButton_res_msg = self.create_push_button_ui(Form, "pushButton_res_msg", 
+			self.right_box_x + push_button_len + 2*push_button_gap, running_y, "Reset Message", length_x=push_button_len)
+
+		# ############### Go Button ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.pushButton_go = self.create_push_button_ui(Form, "pushButton", 
+			self.right_box_x + push_button_gap, running_y, "Go", length_x=2*push_button_len + push_button_gap, 
+			font=self.font_large)
+
+		#self.update_values()
+		self.connect_ui_callbacks(Form)
+
+
+	def connect_ui_callbacks(self, Form):
+		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
+		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_sender)
+		QtCore.QObject.connect(self.textbox_r, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_receiver)
+		QtCore.QObject.connect(self.textbox_m, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.save_temp_message)
+		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
+		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
+		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
+		QtCore.QMetaObject.connectSlotsByName(Form)
 
 	#def update_values(self):
 	  	#self.thread =  WorkThread() 
 	  	#QtCore.QObject.connect( self.thread,  QtCore.SIGNAL("update(QString)"), self.add )
 	  	#self.thread.start()
-
-
 
 
 class WorkThread(QtCore.QThread):
@@ -341,7 +513,8 @@ if __name__ == "__main__":
 	Form = QtGui.QWidget()
 	ui   = Ui_Form()
 	ui.set_initial_pose()
-	ui.setupUi(Form)
+	ui.initialize_ui()
+	ui.setup_source_ui(Form)
 	
 	Form.show()
 	sys.exit(app.exec_())
