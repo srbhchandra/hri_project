@@ -61,16 +61,21 @@ class Ui_Form(object):
 
 	def setupUi(self, Form):
 		Form.setObjectName(_fromUtf8("Form"))
-		Form.resize(376, 338)
+#		Form.resize(376, 338)
+		Form.resize(800, 800)
+
+		# Chair No text box
 		self.spinBox = QtGui.QSpinBox(Form)
-		self.spinBox.setGeometry(QtCore.QRect(20, 160, 161, 121))
+		self.spinBox.setGeometry(QtCore.QRect(20, 160, 161, 81))
 		font = QtGui.QFont()
 		font.setPointSize(35)
 		font.setBold(True)
 		font.setWeight(75)
 		self.spinBox.setFont(font)
-		self.spinBox.setMaximum(9)
+		self.spinBox.setMaximum(9999)
 		self.spinBox.setObjectName(_fromUtf8("spinBox"))
+		
+		# label is "Room/Chair No" text
 		self.label = QtGui.QLabel(Form)
 		self.label.setGeometry(QtCore.QRect(20, 120, 130, 21))
 		font = QtGui.QFont()
@@ -79,15 +84,58 @@ class Ui_Form(object):
 		font.setWeight(75)
 		self.label.setFont(font)
 		self.label.setObjectName(_fromUtf8("label"))
-		self.pushButton = QtGui.QPushButton(Form)
-		self.pushButton.setGeometry(QtCore.QRect(220, 190, 131, 120)) # 41
-		self.pushButton.setObjectName(_fromUtf8("pushButton"))
-		#		self.pushButton_2 = QtGui.QPushButton(Form)
-		#		self.pushButton_2.setGeometry(QtCore.QRect(220, 240, 131, 41))
-		#		self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-		#		self.pushButton_3 = QtGui.QPushButton(Form)
-		#		self.pushButton_3.setGeometry(QtCore.QRect(220, 140, 131, 41))
-		#		self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+
+		# Senders Name text box
+		# Create textbox
+		self.textbox_s = QtGui.QLineEdit(Form)
+		self.textbox_s.setGeometry(QtCore.QRect(20, 300, 161, 81))
+		font = QtGui.QFont()
+		font.setPointSize(15)
+		font.setBold(True)
+		font.setWeight(75)
+		self.textbox_s.setFont(font)
+		self.textbox_s.setObjectName(_fromUtf8("textbox_s"))
+		
+		# label:"Sender's Name" text
+		self.label_s = QtGui.QLabel(Form)
+		self.label_s.setGeometry(QtCore.QRect(20, 260, 130, 21))
+		font = QtGui.QFont()
+		font.setPointSize(12)
+		font.setBold(True)
+		font.setWeight(75)
+		self.label_s.setFont(font)
+		self.label_s.setObjectName(_fromUtf8("label_s"))
+
+		# Receivers Name text box
+		self.spinBox_r = QtGui.QSpinBox(Form)
+		self.spinBox_r.setGeometry(QtCore.QRect(20, 440, 161, 81))
+		font = QtGui.QFont()
+		font.setPointSize(35)
+		font.setBold(True)
+		font.setWeight(75)
+		self.spinBox_r.setFont(font)
+		self.spinBox_r.setMaximum(9999)
+		self.spinBox_r.setObjectName(_fromUtf8("spinBox_r"))
+		
+		# label:"Receiver's Name" text
+		self.label_r = QtGui.QLabel(Form)
+		self.label_r.setGeometry(QtCore.QRect(20, 400, 130, 21))
+		font = QtGui.QFont()
+		font.setPointSize(12)
+		font.setBold(True)
+		font.setWeight(75)
+		self.label_r.setFont(font)
+		self.label_r.setObjectName(_fromUtf8("label_r"))
+
+		self.pushButton_go = QtGui.QPushButton(Form)
+		self.pushButton_go.setGeometry(QtCore.QRect(220, 240, 131, 41))
+		self.pushButton_go.setObjectName(_fromUtf8("pushButton"))
+		self.pushButton_sub_msg = QtGui.QPushButton(Form)
+		self.pushButton_sub_msg.setGeometry(QtCore.QRect(220, 140, 131, 41))
+		self.pushButton_sub_msg.setObjectName(_fromUtf8("pushButton_sub_msg"))
+		self.pushButton_res_msg = QtGui.QPushButton(Form)
+		self.pushButton_res_msg.setGeometry(QtCore.QRect(220, 190, 131, 41))
+		self.pushButton_res_msg.setObjectName(_fromUtf8("pushButton_res_msg"))
 		self.progressBar = QtGui.QProgressBar(Form)
 		self.progressBar.setGeometry(QtCore.QRect(20, 60, 118, 23))
 		self.progressBar.setProperty("value", 0)
@@ -124,10 +172,44 @@ class Ui_Form(object):
 
 		self.retranslateUi(Form)
 		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
-		QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
-		#QtCore.QObject.connect(self.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Home)
-		#QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Cancel)
+		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("valueChanged(char)")), self.set_sender)
+		QtCore.QObject.connect(self.spinBox_r, QtCore.SIGNAL(_fromUtf8("valueChanged(char)")), self.set_receiver)
+		
+		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
+		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
+		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
+		
 		QtCore.QMetaObject.connectSlotsByName(Form)
+
+
+	def retranslateUi(self, Form):
+		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
+		self.label.setText(_translate("Form", "Room/Chair No", None))
+		self.label_s.setText(_translate("Form", "Sender's Name", None))
+		self.label_r.setText(_translate("Form", "Receiver's Name", None))
+		self.pushButton_go.setText(_translate("Form", "Go", None))
+		self.pushButton_sub_msg.setText(_translate("Form", "Submit Message", None))
+		self.pushButton_res_msg.setText(_translate("Form", "Reset Message", None))
+		self.label_2.setText(_translate("Form", "Battery Level", None))
+		self.label_3.setText(_translate("Form", "Robot Status", None))
+
+
+	def set_sender(self):
+		self.sender_name = self.textbox_s.value()
+		print "Sender is :", self.sender_name
+
+
+	def set_receiver(self):
+		self.receiver_name = self.spinBox_r.value()
+		print "Receiver is :", self.receiver_name
+
+
+	def save_message(self):
+		print "Message Recieved!!!"
+
+
+	def reset_message(self):
+		print "Message Resetted!!!"
 
 
 	def set_initial_pose(self):
@@ -147,15 +229,12 @@ class Ui_Form(object):
 		self.start_pos.pose.covariance[35] = 0.06853891945200942
 		self.start_pos.header.frame_id= 'map'
 		self.start_pos.header.stamp = rospy.Time.now()
-		time.sleep(2)
+#		time.sleep(2)
 		self.pub.publish(self.start_pos)
-#		self.pub_amcl.publish(self.start_pos)
-		time.sleep(2)
+#		time.sleep(2)
 		self.pub.publish(self.start_pos)
-#		self.pub_amcl.publish(self.start_pos)
-		time.sleep(2)
+#		time.sleep(2)
 		self.pub.publish(self.start_pos)
-#		self.pub_amcl.publish(self.start_pos)
 		self.current_position = AT_SOURCE
 	
 
@@ -233,14 +312,6 @@ class Ui_Form(object):
 	  	#QtCore.QObject.connect( self.thread,  QtCore.SIGNAL("update(QString)"), self.add )
 	  	#self.thread.start()
 
-	def retranslateUi(self, Form):
-		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
-		self.label.setText(_translate("Form", "Room/Chair No", None))
-		self.pushButton.setText(_translate("Form", "Parcel \nplaced/taken\n - Go", None))
-	#		self.pushButton_2.setText(_translate("Form", "Cancel", None))
-	#		self.pushButton_3.setText(_translate("Form", "Home", None))
-		self.label_2.setText(_translate("Form", "Battery Level", None))
-		self.label_3.setText(_translate("Form", "Robot Status", None))
 
 
 
