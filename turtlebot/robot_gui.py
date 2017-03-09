@@ -29,10 +29,19 @@ table_position[7] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 table_position[8] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 table_position[9] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 
-table_position[1] = (-6.215, -1.463, 0.0, 0.000, 0.000, 0.000, 1.000)
-#start_position    = (0.197, -0.211, -0.0, 0.000, 0.000, 0.000, 1.000)
-#start_position    = (0.202657103539, -0.244970560074, -0.0, 0.000, 0.000, -0.879288454445, 0.476289632345)
-start_position    = (0.0804803371429, -0.39985704422, -0.0, 0.000, 0.000, -0.886831887211, 0.462092202731)
+# mymap3
+#table_position[1] = (-6.215, -1.463, 0.0, 0.000, 0.000, 0.000, 1.000)
+#start_position    = (0.0804803371429, -0.39985704422, -0.0, 0.000, 0.000, -0.886831887211, 0.462092202731)
+
+#map_new
+start_position    = (-0.0264121294022, 0.00267863273621, 0.0, 0.000, 0.000, 0.00690895334364, 0.999976132897)
+
+#my_map4
+start_position    = (-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087)
+table_position[1] = (3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000)
+
+AT_SOURCE      = 0
+AT_DESTINATION = 1
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -111,7 +120,7 @@ class Ui_Form(object):
 		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
 		self.goal = MoveBaseGoal()
 
-		self.update_values()
+		#self.update_values()
 
 		self.retranslateUi(Form)
 		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
@@ -147,7 +156,8 @@ class Ui_Form(object):
 		time.sleep(2)
 		self.pub.publish(self.start_pos)
 #		self.pub_amcl.publish(self.start_pos)
-
+		self.current_position = AT_SOURCE
+	
 
 	def set_table_number(self):
 		self.table_no = self.spinBox.value()
@@ -158,28 +168,31 @@ class Ui_Form(object):
 		print "Go"
 		print "Waiting for server"
 	#	self.client.wait_for_server()
-		
-		self.goal.target_pose.pose.position.x=float(self.current_table_position[0])
-		self.goal.target_pose.pose.position.y=float(self.current_table_position[1])
-		self.goal.target_pose.pose.position.z=float(self.current_table_position[2])
+		if self.current_position == AT_SOURCE:
+			self.goal.target_pose.pose.position.x=float(self.current_table_position[0])
+			self.goal.target_pose.pose.position.y=float(self.current_table_position[1])
+			self.goal.target_pose.pose.position.z=float(self.current_table_position[2])
 
-		self.goal.target_pose.pose.orientation.x = float(self.current_table_position[3])
-		self.goal.target_pose.pose.orientation.y= float(self.current_table_position[4])
-		self.goal.target_pose.pose.orientation.z= float(self.current_table_position[5])
-		self.goal.target_pose.pose.orientation.w= float(self.current_table_position[6])
+			self.goal.target_pose.pose.orientation.x = float(self.current_table_position[3])
+			self.goal.target_pose.pose.orientation.y= float(self.current_table_position[4])
+			self.goal.target_pose.pose.orientation.z= float(self.current_table_position[5])
+			self.goal.target_pose.pose.orientation.w= float(self.current_table_position[6])
+			print "Go to destination"
+		else:
+			self.goal.target_pose.pose.position.x=float(start_position[0])
+			self.goal.target_pose.pose.position.y=float(start_position[1])
+			self.goal.target_pose.pose.position.z=float(start_position[2])
 
+			self.goal.target_pose.pose.orientation.x = float(start_position[3])
+			self.goal.target_pose.pose.orientation.y= float(start_position[4])
+			self.goal.target_pose.pose.orientation.z= float(start_position[5])
+			self.goal.target_pose.pose.orientation.w= float(start_position[6])
+			print "Go Home!! "
 		self.goal.target_pose.header.frame_id= 'map'
 		self.goal.target_pose.header.stamp = rospy.Time.now()
 
-#        goal.target_pose.pose = Pose(Point(pos['x'], pos['y'], 0.000),
-#                                     Quaternion(quat['r1'], quat['r2'], quat['r3'], quat['r4']))
-
-		print "Go"
-
 		self.client.send_goal(self.goal)
 
-#		self.client.wait_for_result()
-	#	rospy.loginfo(self.client.get_result())
 		# Allow TurtleBot up to 60 seconds to complete task
 		success = self.client.wait_for_result(rospy.Duration(60)) 
 		state   = self.client.get_state()
@@ -188,12 +201,12 @@ class Ui_Form(object):
 		if success and state == GoalStatus.SUCCEEDED:
 			# We made it!
 			result = True
+			if self.current_position == AT_DESTINATION:
+				self.current_position = AT_SOURCE
+			else:
+				self.current_position = AT_DESTINATION
 		else:
 			self.client.cancel_goal()
-
-	#	self.goal_sent = False
-		### If result is True - then create new output GUI window
-		### else navigate back to Start location 
 
 
 	def Cancel(self):
@@ -215,18 +228,17 @@ class Ui_Form(object):
 		self.label_4.setText(_fromUtf8(robot_status))
  
 
-	def update_values(self):
-	  	self.thread =  WorkThread() 
-	  	QtCore.QObject.connect( self.thread,  QtCore.SIGNAL("update(QString)"), self.add )
-	  	self.thread.start()
-
+	#def update_values(self):
+	  	#self.thread =  WorkThread() 
+	  	#QtCore.QObject.connect( self.thread,  QtCore.SIGNAL("update(QString)"), self.add )
+	  	#self.thread.start()
 
 	def retranslateUi(self, Form):
 		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
 		self.label.setText(_translate("Form", "Room/Chair No", None))
 		self.pushButton.setText(_translate("Form", "Parcel \nplaced/taken\n - Go", None))
-#		self.pushButton_2.setText(_translate("Form", "Cancel", None))
-#		self.pushButton_3.setText(_translate("Form", "Home", None))
+	#		self.pushButton_2.setText(_translate("Form", "Cancel", None))
+	#		self.pushButton_3.setText(_translate("Form", "Home", None))
 		self.label_2.setText(_translate("Form", "Battery Level", None))
 		self.label_3.setText(_translate("Form", "Robot Status", None))
 
