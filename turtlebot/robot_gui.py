@@ -10,10 +10,11 @@
 # (You may need to change the map file above.)
 # 4. Change the debug variable STATIC_DEBUG_ENABLED
 
+import time
 import rospy
+import pyttsx
 import actionlib
 from move_base_msgs.msg import *
-import time
 from PyQt4 import QtCore, QtGui
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
@@ -68,6 +69,7 @@ class Delivery_Bot(object):
 		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
 		self.goal = MoveBaseGoal()
 		self.initialize_params()
+		self.speech_engine = pyttsx.init()
 
 	def initialize_params(self):
 		self.current_position = AT_SOURCE
@@ -356,6 +358,8 @@ class Delivery_Bot(object):
 		self.table_no = self.spinBox.value()
 		self.current_table_position = table_position[self.table_no]
 		print self.current_table_position
+#		self.speech_engine.say('Good morning.')
+#		self.speech_engine.runAndWait()
 
 
 	def set_sender(self):
