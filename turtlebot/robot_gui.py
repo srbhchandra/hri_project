@@ -32,6 +32,7 @@ start_position    = (-0.0264121294022, 0.00267863273621, 0.0, 0.000, 0.000, 0.00
 start_position    = (-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087)
 table_position[1] = (3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000)
 
+STATIC_DEBUG_ENABLED = True
 AT_SOURCE      = 0
 AT_DESTINATION = 1
 
@@ -50,27 +51,36 @@ except AttributeError:
 		return QtGui.QApplication.translate(context, text, disambig)
 
 
-class Ui_Form(object):
+class Delivery_Bot(object):
+
+	def __init__(self):
+		self.current_position = AT_SOURCE
+		self.table_no = 0
+		self.current_table_position = table_position[self.table_no]
+		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+		self.goal = MoveBaseGoal()
+		self.parcel_on_bot = False
+		self.message = None
+		self.sender_name = None
+		self.receiver_name = None
+		self.temp_message = None
+
+
+	def create_font(self, font_size, bold, weight):
+		font = QtGui.QFont()
+		font.setPointSize(font_size)
+		font.setBold(bold)
+		font.setWeight(weight)
+		return font
+
 
 	def initialize_ui(self, Form):
 		self.Form = Form
 		# Create default font
-		default_font_size = 12
-		large_font_size   = 18
-		self.font_text = QtGui.QFont()
-		self.font_text.setPointSize(default_font_size)
-		self.font_text.setBold(True)
-		self.font_text.setWeight(75)
-
-		self.font_large = QtGui.QFont()
-		self.font_large.setPointSize(large_font_size)
-		self.font_large.setBold(True)
-		self.font_large.setWeight(75)
-
-		self.font_red = QtGui.QFont()
-		self.font_red.setPointSize(large_font_size)
-		self.font_red.setBold(True)
-		self.font_red.setWeight(75)
+		self.default_font_size = 12
+		self.large_font_size   = 18
+		self.font_text  = self.create_font(self.default_font_size, True, 75)
+		self.font_large = self.create_font(self.large_font_size, True, 75)
 
 		self.box_width  = 200
 		self.box_height = 40
@@ -210,7 +220,7 @@ class Ui_Form(object):
 
 		# ############### Label to denote error ###############
 		running_y = running_y + self.box_height + self.unrelated_gap_y
-		self.label_error = self.create_label_ui(self.Form, "label_error", self.left_box_x, running_y, "", 600, 25, self.font_red)
+		self.label_error = self.create_label_ui(self.Form, "label_error", self.left_box_x, running_y, "", 600, 25, self.font_large)
 		self.label_error.setStyleSheet('color: red')
 
 		# ------------- RIGHT SIDE OF GUI -------------
@@ -297,7 +307,7 @@ class Ui_Form(object):
 		print "Message Resetted!!! ", self.message
 
 
-	def set_initial_pose(self):
+	def publish_initial_pose(self):
 		self.start_pos = PoseWithCovarianceStamped()
 		self.pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
 #		self.pub_amcl = rospy.Publisher('/amcl_pose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
@@ -320,14 +330,8 @@ class Ui_Form(object):
 		self.pub.publish(self.start_pos)
 #		time.sleep(2)
 		self.pub.publish(self.start_pos)
+
 		
-		self.current_position = AT_SOURCE
-		self.table_no = 0
-		self.current_table_position = table_position[self.table_no]
-		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-		self.goal = MoveBaseGoal()
-		self.parcel_on_bot = False
-		self.message = None
 
 	def set_table_number(self):
 		self.table_no = self.spinBox.value()
@@ -363,15 +367,20 @@ class Ui_Form(object):
 		self.goal.target_pose.header.frame_id= 'map'
 		self.goal.target_pose.header.stamp = rospy.Time.now()
 
-		self.client.send_goal(self.goal)
+		if STATIC_DEBUG_ENABLED == False:
+			self.client.send_goal(self.goal)
+			# Allow TurtleBot up to 60 seconds to complete task
+			success = self.client.wait_for_result(rospy.Duration(60)) 
+			state   = self.client.get_state()
+			result  = False
+		else:
+			success = True
+			state = GoalStatus.SUCCEEDED
+			time.sleep(3)
 
-		# Allow TurtleBot up to 60 seconds to complete task
-		success = self.client.wait_for_result(rospy.Duration(60)) 
-		state   = self.client.get_state()
-		result  = False
 
 		if success and state == GoalStatus.SUCCEEDED:
-			# We made it!
+			print "DESTINATION REACHED"
 			result = True
 			if self.current_position == AT_DESTINATION:
 				self.current_position = AT_SOURCE
@@ -517,10 +526,10 @@ if __name__ == "__main__":
 
 	app  = QtGui.QApplication(sys.argv)
 	Form = QtGui.QWidget()
-	ui   = Ui_Form()
-	ui.set_initial_pose()
-	ui.initialize_ui(Form)
-	ui.setup_source_ui(Form)
-	
+	db   = Delivery_Bot()
+	db.publish_initial_pose()
+	db.initialize_ui(Form)
+	db.setup_source_ui(Form)
+
 	Form.show()
 	sys.exit(app.exec_())
