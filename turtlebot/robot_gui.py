@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# Authors: Saurabh Bipin Chandra
+#          Divya Aggarwal
+#
+# The following need to be done/run before this code:
+# 1. roscore
+# 2. roslaunch turtlebot_bringup minimal.launch
+# 3. roslaunch turtlebot_navigation amcl_demo.launch map_file:=/home/turtlebot/hri_project/maps/my_map4.yaml
+# (You may need to change the map file above.)
+# 4. Change the debug variable STATIC_DEBUG_ENABLED
+
 import rospy
 import actionlib
 from move_base_msgs.msg import *
@@ -7,6 +17,8 @@ import time
 from PyQt4 import QtCore, QtGui
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
+
+STATIC_DEBUG_ENABLED = True
 
 #Change to chair positions
 table_position = dict()
@@ -32,7 +44,6 @@ start_position    = (-0.0264121294022, 0.00267863273621, 0.0, 0.000, 0.000, 0.00
 start_position    = (-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087)
 table_position[1] = (3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000)
 
-STATIC_DEBUG_ENABLED = True
 AT_SOURCE      = 0
 AT_DESTINATION = 1
 
@@ -64,6 +75,58 @@ class Delivery_Bot(object):
 		self.sender_name = None
 		self.receiver_name = None
 		self.temp_message = None
+		self.prev_message = None
+
+
+	def _sleep(self, time):
+		if STATIC_DEBUG_ENABLED is False:
+			time.sleep(time)
+
+
+	def update_position_and_orientation(self, element, position):
+		element.pose.position.x=float(position[0])
+		element.pose.position.y=float(position[1])
+		element.pose.position.z=float(position[2])
+		element.pose.orientation.x = float(position[3])
+		element.pose.orientation.y= float(position[4])
+		element.pose.orientation.z= float(position[5])
+		element.pose.orientation.w= float(position[6])
+
+
+	def update_covariance(self, element): 
+		element.covariance[0]  = 0.25
+		element.covariance[7]  = 0.25
+		element.covariance[35] = 0.06853891945200942
+
+
+	def update_header(self, element): 
+		element.frame_id= 'map'
+		element.stamp = rospy.Time.now()
+
+
+	def publish_initial_pose(self):
+		self.start_pos = PoseWithCovarianceStamped()
+		self.pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
+
+		self.update_position_and_orientation(self.start_pos.pose, start_position)
+		self.update_covariance(self.start_pos.pose)
+		self.update_header(self.start_pos.header)
+		self._sleep(2)
+		self.pub.publish(self.start_pos)
+		self._sleep(2)
+		self.pub.publish(self.start_pos)
+		self._sleep(2)
+		self.pub.publish(self.start_pos)
+
+
+	def show_source_ui(self):
+		self.dest_form.close()
+		self.source_form.show()
+
+
+	def show_destination_ui(self):
+		self.source_form.close()
+		self.dest_form.show()
 
 
 	def create_font(self, font_size, bold, weight):
@@ -74,15 +137,14 @@ class Delivery_Bot(object):
 		return font
 
 
-	def initialize_ui(self, Form):
-		self.Form = Form
+	def initialize_ui(self):
 		# Create default font
 		self.default_font_size = 12
 		self.large_font_size   = 18
 		self.font_text  = self.create_font(self.default_font_size, True, 75)
 		self.font_large = self.create_font(self.large_font_size, True, 75)
 
-		self.box_width  = 200
+		self.box_width  = 220
 		self.box_height = 40
 		self.label_box_width  = self.box_width
 		self.label_box_height = 25
@@ -94,7 +156,7 @@ class Delivery_Bot(object):
 		self.right_box_x = self.left_box_x + max(self.box_width, self.label_box_width) + self.gap_x
 		self.msg_box_width  = 300
 		self.msg_box_height = 2*(self.box_height + self.label_box_height + self.related_gap_y) + self.unrelated_gap_y
-		self.window_width  = 580
+		self.window_width  = 600
 		self.window_height = 500
 
 
@@ -168,7 +230,10 @@ class Delivery_Bot(object):
 		return text_box
 
 
-	def setup_source_ui(self, Form):
+	def setup_source_ui(self):
+		self.source_form = QtGui.QWidget()
+		Form = self.source_form
+
 		# Complete Window
 		Form.setObjectName(_fromUtf8("Form"))
 		Form.resize(self.window_width, self.window_height)
@@ -178,19 +243,19 @@ class Delivery_Bot(object):
 		# ############### Battery level ###############
 		# label
 		running_y = self.start_y
-		self.label_battery = self.create_label_ui(Form, "label_battery", self.left_box_x, running_y, "Battery Level")
+		self.create_label_ui(Form, "label_battery", self.left_box_x, running_y, "Battery Level")
 		
 		# Output progress bar
 		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.progressBar = QtGui.QProgressBar(Form)
-		self.progressBar.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
-		self.progressBar.setProperty("value", 0)
-		self.progressBar.setObjectName(_fromUtf8("progressBar"))
+		self.progressBar_s = QtGui.QProgressBar(Form)
+		self.progressBar_s.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
+		self.progressBar_s.setProperty("value", 0)
+		self.progressBar_s.setObjectName(_fromUtf8("progressBar_s"))
 
 		# ############### Room/Chair No ###############
 		# label
 		running_y = running_y + self.label_box_height + self.unrelated_gap_y
-		self.label = self.create_label_ui(Form, "label", self.left_box_x, running_y, "Chair No")
+		self.create_label_ui(Form, "label", self.left_box_x, running_y, "Chair No")
 		
 		# Input text box
 		running_y = running_y + self.label_box_height + self.related_gap_y
@@ -220,7 +285,8 @@ class Delivery_Bot(object):
 
 		# ############### Label to denote error ###############
 		running_y = running_y + self.box_height + self.unrelated_gap_y
-		self.label_error = self.create_label_ui(self.Form, "label_error", self.left_box_x, running_y, "", 600, 25, self.font_large)
+		self.label_error = self.create_label_ui(Form, "label_error", self.left_box_x, running_y, "", 
+			self.window_width - self.left_box_x, self.label_box_height, self.font_large)
 		self.label_error.setStyleSheet('color: red')
 
 		# ------------- RIGHT SIDE OF GUI -------------
@@ -257,25 +323,25 @@ class Delivery_Bot(object):
 			font=self.font_large)
 
 		#self.update_values()
-		self.connect_ui_callbacks(Form)
+		self.connect_source_ui_callbacks()
 
 
-	def connect_ui_callbacks(self, Form):
+	def connect_source_ui_callbacks(self):
 		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
 		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_sender)
 		QtCore.QObject.connect(self.textbox_r, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_receiver)
 		QtCore.QObject.connect(self.textbox_m, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.save_temp_message)
-		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Go)
+		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go)
 		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
 		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
 		QtCore.QObject.connect(self.checkbox, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_placed)
-		QtCore.QMetaObject.connectSlotsByName(Form)
+		QtCore.QMetaObject.connectSlotsByName(self.source_form)
 
 
-	def parcel_placed(self):
-		self.parcel_on_bot = 1 - self.parcel_on_bot
-		if self.parcel_on_bot:
-			self.label_error.setText(_translate("Form", "", None))
+	def set_table_number(self):
+		self.table_no = self.spinBox.value()
+		self.current_table_position = table_position[self.table_no]
+		print self.current_table_position
 
 
 	def set_sender(self):
@@ -287,6 +353,12 @@ class Delivery_Bot(object):
 	def set_receiver(self):
 		self.receiver_name = self.textbox_r.toPlainText()
 		print "Receiver is :", self.receiver_name
+
+
+	def parcel_placed(self):
+		self.parcel_on_bot = 1 - self.parcel_on_bot
+		if self.parcel_on_bot:
+			self.label_error.setText(_translate("Form", "", None))
 
 
 	def save_temp_message(self):
@@ -307,199 +379,184 @@ class Delivery_Bot(object):
 		print "Message Resetted!!! ", self.message
 
 
-	def publish_initial_pose(self):
-		self.start_pos = PoseWithCovarianceStamped()
-		self.pub = rospy.Publisher('/initialpose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
-#		self.pub_amcl = rospy.Publisher('/amcl_pose', PoseWithCovarianceStamped, queue_size=10) #, latch = True
-
-		self.start_pos.pose.pose.position.x=float(start_position[0])
-		self.start_pos.pose.pose.position.y=float(start_position[1])
-		self.start_pos.pose.pose.position.z=float(start_position[2])
-		self.start_pos.pose.pose.orientation.x = float(start_position[3])
-		self.start_pos.pose.pose.orientation.y= float(start_position[4])
-		self.start_pos.pose.pose.orientation.z= float(start_position[5])
-		self.start_pos.pose.pose.orientation.w= float(start_position[6])
-		self.start_pos.pose.covariance[0]  = 0.25
-		self.start_pos.pose.covariance[7]  = 0.25
-		self.start_pos.pose.covariance[35] = 0.06853891945200942
-		self.start_pos.header.frame_id= 'map'
-		self.start_pos.header.stamp = rospy.Time.now()
-#		time.sleep(2)
-		self.pub.publish(self.start_pos)
-#		time.sleep(2)
-		self.pub.publish(self.start_pos)
-#		time.sleep(2)
-		self.pub.publish(self.start_pos)
-
-		
-
-	def set_table_number(self):
-		self.table_no = self.spinBox.value()
-		self.current_table_position = table_position[self.table_no]
-		print self.current_table_position
-
-	def Go(self):
-		print "Go"
+	def go(self):
 		if self.current_position == AT_SOURCE:
 			if self.parcel_on_bot or self.message:
-				self.goal.target_pose.pose.position.x=float(self.current_table_position[0])
-				self.goal.target_pose.pose.position.y=float(self.current_table_position[1])
-				self.goal.target_pose.pose.position.z=float(self.current_table_position[2])
-
-				self.goal.target_pose.pose.orientation.x = float(self.current_table_position[3])
-				self.goal.target_pose.pose.orientation.y= float(self.current_table_position[4])
-				self.goal.target_pose.pose.orientation.z= float(self.current_table_position[5])
-				self.goal.target_pose.pose.orientation.w= float(self.current_table_position[6])
-				print "Go to destination"
+				self.update_position_and_orientation(self.goal.target_pose, self.current_table_position)
+				print "Go to Destination"
 			else:
 				self.label_error.setText(_translate("Form", "Need either a parcel or a message to deliver", None))
 				return
 		else:
-			self.goal.target_pose.pose.position.x=float(start_position[0])
-			self.goal.target_pose.pose.position.y=float(start_position[1])
-			self.goal.target_pose.pose.position.z=float(start_position[2])
+			if self.parcel_on_bot is 0:
+				self.update_position_and_orientation(self.goal.target_pose, start_position)
+				print "Go to Home"
+			else:
+				self.label_error_d.setText(_translate("Form", "Please pick up your parcel", None))
+				return
 
-			self.goal.target_pose.pose.orientation.x = float(start_position[3])
-			self.goal.target_pose.pose.orientation.y= float(start_position[4])
-			self.goal.target_pose.pose.orientation.z= float(start_position[5])
-			self.goal.target_pose.pose.orientation.w= float(start_position[6])
-			print "Go Home!! "
-		self.goal.target_pose.header.frame_id= 'map'
-		self.goal.target_pose.header.stamp = rospy.Time.now()
+		self.update_header(self.goal.target_pose.header)
+		result  = False
 
 		if STATIC_DEBUG_ENABLED == False:
 			self.client.send_goal(self.goal)
 			# Allow TurtleBot up to 60 seconds to complete task
 			success = self.client.wait_for_result(rospy.Duration(60)) 
 			state   = self.client.get_state()
-			result  = False
 		else:
-			success = True
-			state = GoalStatus.SUCCEEDED
 			time.sleep(3)
-
+			success = True
+			state   = GoalStatus.SUCCEEDED
 
 		if success and state == GoalStatus.SUCCEEDED:
-			print "DESTINATION REACHED"
 			result = True
 			if self.current_position == AT_DESTINATION:
+				print "HOME REACHED"
 				self.current_position = AT_SOURCE
 			else:
+				print "DESTINATION REACHED"
 				self.current_position = AT_DESTINATION
-				#self.setup_destination_ui()
+				self.generate_delivery_message()
+				self.show_destination_ui()
 		else:
 			self.client.cancel_goal()
 
 
-	def add(self,text):
-		battery_value = rospy.get_param("battery_value")
-		robot_status  = rospy.get_param("robot_status")
+	def generate_delivery_message(self):
+		delivery_msg = "There is "
+		if self.parcel_on_bot and self.message:
+			delivery_msg = delivery_msg + "an item\nand a message "
+		elif self.parcel_on_bot:
+			delivery_msg = delivery_msg + "an item "
+		elif self.message:
+			delivery_msg = delivery_msg + "a message "
+		if self.receiver_name:
+			delivery_msg = delivery_msg + "\nfor " + self.receiver_name
+		if self.sender_name:
+			delivery_msg = delivery_msg + "\nfrom " + self.sender_name
+		self.label_dm.setText(_translate("Form", delivery_msg, None))
+		print "Delivery Msg: ", delivery_msg
 
-		self.progressBar.setProperty("value", battery_value)
-		self.label_4.setText(_fromUtf8(robot_status))
- 
 
 	def setup_destination_ui(self):
+		self.dest_form = QtGui.QWidget()
+		Form = self.dest_form
+
 		# Complete Window
-		Form = self.Form
-		Form.setObjectName(_fromUtf8("Form"))
+		Form.setObjectName(_fromUtf8("Form_d"))
 		Form.resize(self.window_width, self.window_height)
-		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
+		Form.setWindowTitle(_translate("Form_d", "Delivery Robot", None))
+
+		# ------------- RIGHT SIDE OF GUI -------------
+		# ############### Bot Status ###############
+		running_y = self.start_y
+		self.label_status_d = self.create_label_ui(Form, "label_status_d", self.right_box_x, running_y, "Bot Status: Active")
+
+		# ############### Message ###############
+		# Message related buttons
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		running_y = running_y + self.label_box_height + self.unrelated_gap_y
+		push_button_gap = 5
+		push_button_len = (self.msg_box_width - 4*push_button_gap)/2
+		
+		self.pushButton_show_msg = self.create_push_button_ui(Form, "pushButton_show_msg", 
+			self.right_box_x + push_button_gap, running_y, "Show Message", length_x=push_button_len)
+		
+		self.pushButton_clear_msg = self.create_push_button_ui(Form, "pushButton_clear_msg", 
+			self.right_box_x + push_button_len + 2*push_button_gap, running_y, "Clear Message", length_x=push_button_len)
+
+		# label
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		right_message_label_y = running_y
+		self.create_label_ui(Form, "label_m", self.right_box_x, running_y, "Message")
+
+		# Input text box
+		running_y = running_y + self.label_box_height + self.related_gap_y
+		self.textbox_m_d = self.create_text_box_ui(Form, "textbox_m_d", self.right_box_x, running_y, 
+			self.msg_box_width, self.msg_box_height)
+
+		# ############### Go Button ###############
+		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
+		right_go_button_y = running_y
+		self.pushButton_go_d = self.create_push_button_ui(Form, "pushButton_go_d", 
+			self.right_box_x + push_button_gap, running_y, "Go Home", length_x=2*push_button_len + push_button_gap, 
+			font=self.font_large)
+
 
 		# ------------- LEFT SIDE OF GUI -------------
 		# ############### Battery level ###############
 		# label
 		running_y = self.start_y
-		self.label_battery = self.create_label_ui(Form, "label_battery", self.left_box_x, running_y, "Battery Level")
+		self.create_label_ui(Form, "label_battery", self.left_box_x, running_y, "Battery Level")
 		
 		# Output progress bar
 		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.progressBar = QtGui.QProgressBar(Form)
-		self.progressBar.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
-		self.progressBar.setProperty("value", 0)
-		self.progressBar.setObjectName(_fromUtf8("progressBar"))
+		self.progressBar_d = QtGui.QProgressBar(Form)
+		self.progressBar_d.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
+		self.progressBar_d.setProperty("value", 0)
+		self.progressBar_d.setObjectName(_fromUtf8("progressBar_d"))
 
-		# ############### Room/Chair No ###############
+		# ############### Destination Main Message ###############
 		# label
-		running_y = running_y + self.label_box_height + self.unrelated_gap_y
-		delivery_msg = "There is "
-		if self.parcel_on_bot and self.message:
-			delivery_msg = delivery_msg + "a message and an item "
-		elif self.parcel_on_bot:
-			delivery_msg = delivery_msg + "an item "
-		elif self.message:
-			delivery_msg = delivery_msg + "a message "
-		delivery_msg = delivery_msg + "for " + self.receiver_name + " from " + self.sender_name
+		running_y = right_message_label_y
+		print "Left:: Dest Msg starting y = ", running_y
+		self.label_dm = self.create_label_ui(Form, "label_dm", self.left_box_x, running_y, "", 
+			self.label_box_width, 4*self.box_height, self.font_large)
 
-		self.label_delivery = self.create_label_ui(Form, "label", self.left_box_x, running_y, delivery_msg)
-		
-		# Input text box
-		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.spinBox = self.create_spin_box_ui(Form, "spinBox", self.left_box_x, running_y, max=4299)
+		# ############### Parcel Received Check box ###############
+		running_y = right_go_button_y
+		print "Left:: Parcel received starting y = ", running_y
+		self.checkbox_d = self.create_check_box_ui(Form, "checkbox_d", self.left_box_x, running_y, 
+			"Parcel Received", self.label_box_width, self.label_box_height)
 
-		# ############### Sender's Name ###############
-		# label
+		# ############### Label to denote error ###############
 		running_y = running_y + self.box_height + self.unrelated_gap_y
-		self.label_s = self.create_label_ui(Form, "label_s", self.left_box_x, running_y, "Sender's Name")
-		
-		# Input text box
-		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.textbox_s = self.create_text_box_ui(Form, "textbox_s", self.left_box_x, running_y)
-		
-		# ############### Receiver's Name ###############
-		# label
-		running_y = running_y + self.box_height + self.unrelated_gap_y
-		self.label_r = self.create_label_ui(Form, "label_r", self.left_box_x, running_y, "Receiver's Name")
-
-		# Input text box
-		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.textbox_r = self.create_text_box_ui(Form, "textbox_r", self.left_box_x, running_y)
-
-		# ############### Parcel Placed Check box ###############
-		running_y = running_y + self.box_height + self.unrelated_gap_y
-		self.checkbox = self.create_check_box_ui(Form, "checkbox", self.left_box_x, running_y, "Parcel Placed")
-
-
-		# ------------- RIGHT SIDE OF GUI -------------
-		# ############### Bot Status ###############
-		running_y = self.start_y
-		self.label_status = self.create_label_ui(Form, "label_status", self.right_box_x, running_y, "Bot Status: Active")
-
-		# ############### Message ###############
-		# label
-		running_y = running_y + self.label_box_height + self.related_gap_y
-		running_y = running_y + self.label_box_height + self.unrelated_gap_y
-		self.label_m = self.create_label_ui(Form, "label_m", self.right_box_x, running_y, "Message")
-
-		# Input text box
-		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.textbox_m = self.create_text_box_ui(Form, "textbox_m", self.right_box_x, running_y, 
-			self.msg_box_width, self.msg_box_height)
-
-		# Message related buttons
-		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
-		push_button_gap = 5
-		push_button_len = (self.msg_box_width - 4*push_button_gap)/2
-		
-		self.pushButton_sub_msg = self.create_push_button_ui(Form, "pushButton_sub_msg", 
-			self.right_box_x + push_button_gap, running_y, "Submit Message", length_x=push_button_len)
-		
-		self.pushButton_res_msg = self.create_push_button_ui(Form, "pushButton_res_msg", 
-			self.right_box_x + push_button_len + 2*push_button_gap, running_y, "Reset Message", length_x=push_button_len)
-
-		# ############### Go Button ###############
-		running_y = running_y + self.box_height + self.unrelated_gap_y
-		self.pushButton_go = self.create_push_button_ui(Form, "pushButton", 
-			self.right_box_x + push_button_gap, running_y, "Go", length_x=2*push_button_len + push_button_gap, 
-			font=self.font_large)
+		self.label_error_d = self.create_label_ui(Form, "label_error_d", self.left_box_x, running_y, "", 
+			self.window_width - self.left_box_x, self.label_box_height, self.font_large)
+		self.label_error_d.setStyleSheet('color: red')
 
 		#self.update_values()
-#		self.connect_ui_callbacks(Form)
+		self.connect_destination_ui_callbacks()
+
+
+	def connect_destination_ui_callbacks(self):
+		QtCore.QObject.connect(self.pushButton_show_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.show_message)
+		QtCore.QObject.connect(self.pushButton_clear_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clear_message)
+		QtCore.QObject.connect(self.checkbox_d, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_received)
+		QtCore.QObject.connect(self.pushButton_go_d, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go)
+		QtCore.QMetaObject.connectSlotsByName(self.dest_form)
+
+
+	def show_message(self):
+		if self.message:
+			self.textbox_m_d.setText(_translate("Form", self.message, None))
+
+
+	def clear_message(self):
+		self.textbox_m_d.setText(_translate("Form", "", None))
+		self.prev_message = self.message
+		self.message = None
+		self.temp_message = None
+
+
+	def parcel_received(self):
+		self.parcel_on_bot = 0
+		self.label_error_d.setText(_translate("Form", "", None))
+
 
 	#def update_values(self):
 	  	#self.thread =  WorkThread() 
 	  	#QtCore.QObject.connect( self.thread,  QtCore.SIGNAL("update(QString)"), self.add )
 	  	#self.thread.start()
+
+
+#	def add(self,text):
+#		battery_value = rospy.get_param("battery_value")
+#		robot_status  = rospy.get_param("robot_status")
+#		self.progressBar_s.setProperty("value", battery_value)
+#		self.progressBar_d.setProperty("value", battery_value)
+#		self.label_status.setText(_fromUtf8(robot_status))
+#		self.label_status_d.setText(_fromUtf8(robot_status))
 
 
 class WorkThread(QtCore.QThread):
@@ -525,11 +582,11 @@ if __name__ == "__main__":
 	rospy.set_param('robot_status'," ")
 
 	app  = QtGui.QApplication(sys.argv)
-	Form = QtGui.QWidget()
 	db   = Delivery_Bot()
 	db.publish_initial_pose()
-	db.initialize_ui(Form)
-	db.setup_source_ui(Form)
+	db.initialize_ui()
+	db.setup_source_ui()
+	db.setup_destination_ui()
+	db.show_source_ui()
 
-	Form.show()
 	sys.exit(app.exec_())
