@@ -65,18 +65,20 @@ except AttributeError:
 class Delivery_Bot(object):
 
 	def __init__(self):
+		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
+		self.goal = MoveBaseGoal()
+		self.initialize_params()
+
+	def initialize_params(self):
 		self.current_position = AT_SOURCE
 		self.table_no = 0
 		self.current_table_position = table_position[self.table_no]
-		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
-		self.goal = MoveBaseGoal()
-		self.parcel_on_bot = False
-		self.message = None
-		self.sender_name = None
+		self.parcel_on_bot = 0
+		self.message       = None
+		self.sender_name   = None
 		self.receiver_name = None
-		self.temp_message = None
-		self.prev_message = None
-
+		self.temp_message  = None
+		self.prev_message  = None
 
 	def _sleep(self, time):
 		if STATIC_DEBUG_ENABLED is False:
@@ -121,11 +123,19 @@ class Delivery_Bot(object):
 
 	def show_source_ui(self):
 		self.dest_form.close()
+		self.textbox_s.setText(_translate("Form", "", None))
+		self.textbox_r.setText(_translate("Form", "", None))
+		self.textbox_m.setText(_translate("Form", "", None))
+		self.checkbox.setChecked(False)
+		self.spinBox.setValue(0)
+		self.initialize_params()
+		print "In show_source_ui: self.parcel_on_bot = ", self.parcel_on_bot
 		self.source_form.show()
 
 
 	def show_destination_ui(self):
 		self.source_form.close()
+		self.checkbox_d.setChecked(False)
 		self.dest_form.show()
 
 
@@ -144,11 +154,11 @@ class Delivery_Bot(object):
 		self.font_text  = self.create_font(self.default_font_size, True, 75)
 		self.font_large = self.create_font(self.large_font_size, True, 75)
 
-		self.box_width  = 220
-		self.box_height = 40
+		self.box_width        = 220
+		self.box_height       = 40
 		self.label_box_width  = self.box_width
 		self.label_box_height = 25
-		self.start_y    = 20
+		self.start_y          = 20
 		self.related_gap_y    = 10
 		self.unrelated_gap_y  = 20
 		self.gap_x            = 30
@@ -156,8 +166,10 @@ class Delivery_Bot(object):
 		self.right_box_x = self.left_box_x + max(self.box_width, self.label_box_width) + self.gap_x
 		self.msg_box_width  = 300
 		self.msg_box_height = 2*(self.box_height + self.label_box_height + self.related_gap_y) + self.unrelated_gap_y
-		self.window_width  = 600
-		self.window_height = 500
+		self.window_width   = 600
+		self.window_height  = 500
+		self.window_start_x = 400
+		self.window_start_y = 100
 
 
 	def set_ui_params(self, ui_unit, start_x, start_y, length_x, length_y, name, text, font):
@@ -202,6 +214,7 @@ class Delivery_Bot(object):
 			font = self.font_large
 		self.set_ui_params(spinBox, start_x, start_y, length_x, length_y, spin_box_name, None, font)			
 		spinBox.setMaximum(max)
+		spinBox.setValue(0)
 		return spinBox
 
 
@@ -236,6 +249,7 @@ class Delivery_Bot(object):
 
 		# Complete Window
 		Form.setObjectName(_fromUtf8("Form"))
+		Form.move(self.window_start_x, self.window_start_y)
 		Form.resize(self.window_width, self.window_height)
 		Form.setWindowTitle(_translate("Form", "Delivery Robot", None))
 
@@ -331,7 +345,7 @@ class Delivery_Bot(object):
 		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_sender)
 		QtCore.QObject.connect(self.textbox_r, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_receiver)
 		QtCore.QObject.connect(self.textbox_m, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.save_temp_message)
-		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go)
+		QtCore.QObject.connect(self.pushButton_go, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go_to_destination)
 		QtCore.QObject.connect(self.pushButton_res_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.reset_message)
 		QtCore.QObject.connect(self.pushButton_sub_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.save_message)
 		QtCore.QObject.connect(self.checkbox, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_placed)
@@ -379,25 +393,7 @@ class Delivery_Bot(object):
 		print "Message Resetted!!! ", self.message
 
 
-	def go(self):
-		if self.current_position == AT_SOURCE:
-			if self.parcel_on_bot or self.message:
-				self.update_position_and_orientation(self.goal.target_pose, self.current_table_position)
-				print "Go to Destination"
-			else:
-				self.label_error.setText(_translate("Form", "Need either a parcel or a message to deliver", None))
-				return
-		else:
-			if self.parcel_on_bot is 0:
-				self.update_position_and_orientation(self.goal.target_pose, start_position)
-				print "Go to Home"
-			else:
-				self.label_error_d.setText(_translate("Form", "Please pick up your parcel", None))
-				return
-
-		self.update_header(self.goal.target_pose.header)
-		result  = False
-
+	def navigate(self):
 		if STATIC_DEBUG_ENABLED == False:
 			self.client.send_goal(self.goal)
 			# Allow TurtleBot up to 60 seconds to complete task
@@ -409,17 +405,35 @@ class Delivery_Bot(object):
 			state   = GoalStatus.SUCCEEDED
 
 		if success and state == GoalStatus.SUCCEEDED:
-			result = True
-			if self.current_position == AT_DESTINATION:
-				print "HOME REACHED"
-				self.current_position = AT_SOURCE
-			else:
-				print "DESTINATION REACHED"
-				self.current_position = AT_DESTINATION
-				self.generate_delivery_message()
-				self.show_destination_ui()
+			return True
 		else:
 			self.client.cancel_goal()
+			return False
+
+
+	def go_to_destination(self):
+		if self.current_position != AT_SOURCE:
+			print "ERROR: Expected current position is Source"
+			return
+
+		if self.parcel_on_bot or self.message:
+			self.update_position_and_orientation(self.goal.target_pose, self.current_table_position)
+			print "Go to Destination"
+		else:
+			self.label_error.setText(_translate("Form", "Need either a parcel or a message to deliver", None))
+			return
+
+		self.update_header(self.goal.target_pose.header)
+		result = self.navigate()
+
+		if result is True:
+			print "DESTINATION REACHED"
+			self.current_position = AT_DESTINATION
+			self.generate_delivery_message()
+			self.show_destination_ui()
+		else:
+			print "ERROR: Navigation Failed"
+			self.go_to_source()
 
 
 	def generate_delivery_message(self):
@@ -435,7 +449,6 @@ class Delivery_Bot(object):
 		if self.sender_name:
 			delivery_msg = delivery_msg + "\nfrom " + self.sender_name
 		self.label_dm.setText(_translate("Form", delivery_msg, None))
-		print "Delivery Msg: ", delivery_msg
 
 
 	def setup_destination_ui(self):
@@ -444,6 +457,7 @@ class Delivery_Bot(object):
 
 		# Complete Window
 		Form.setObjectName(_fromUtf8("Form_d"))
+		Form.move(self.window_start_x, self.window_start_y)
 		Form.resize(self.window_width, self.window_height)
 		Form.setWindowTitle(_translate("Form_d", "Delivery Robot", None))
 
@@ -478,6 +492,12 @@ class Delivery_Bot(object):
 		# ############### Go Button ###############
 		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
 		right_go_button_y = running_y
+		self.pushButton_respond = self.create_push_button_ui(Form, "pushButton_respond", 
+			self.right_box_x + push_button_gap, running_y, "Respond", length_x=2*push_button_len + push_button_gap, 
+			font=self.font_large)
+
+		# ############### Go Button ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
 		self.pushButton_go_d = self.create_push_button_ui(Form, "pushButton_go_d", 
 			self.right_box_x + push_button_gap, running_y, "Go Home", length_x=2*push_button_len + push_button_gap, 
 			font=self.font_large)
@@ -499,20 +519,18 @@ class Delivery_Bot(object):
 		# ############### Destination Main Message ###############
 		# label
 		running_y = right_message_label_y
-		print "Left:: Dest Msg starting y = ", running_y
 		self.label_dm = self.create_label_ui(Form, "label_dm", self.left_box_x, running_y, "", 
 			self.label_box_width, 4*self.box_height, self.font_large)
 
 		# ############### Parcel Received Check box ###############
-		running_y = right_go_button_y
-		print "Left:: Parcel received starting y = ", running_y
+		running_y = right_go_button_y + 5
 		self.checkbox_d = self.create_check_box_ui(Form, "checkbox_d", self.left_box_x, running_y, 
 			"Parcel Received", self.label_box_width, self.label_box_height)
 
 		# ############### Label to denote error ###############
-		running_y = running_y + self.box_height + self.unrelated_gap_y
+		running_y = running_y + self.label_box_height + self.related_gap_y
 		self.label_error_d = self.create_label_ui(Form, "label_error_d", self.left_box_x, running_y, "", 
-			self.window_width - self.left_box_x, self.label_box_height, self.font_large)
+			self.label_box_width, 2*self.label_box_height+5, self.font_large)
 		self.label_error_d.setStyleSheet('color: red')
 
 		#self.update_values()
@@ -523,7 +541,7 @@ class Delivery_Bot(object):
 		QtCore.QObject.connect(self.pushButton_show_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.show_message)
 		QtCore.QObject.connect(self.pushButton_clear_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clear_message)
 		QtCore.QObject.connect(self.checkbox_d, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_received)
-		QtCore.QObject.connect(self.pushButton_go_d, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go)
+		QtCore.QObject.connect(self.pushButton_go_d, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go_to_source)
 		QtCore.QMetaObject.connectSlotsByName(self.dest_form)
 
 
@@ -542,6 +560,31 @@ class Delivery_Bot(object):
 	def parcel_received(self):
 		self.parcel_on_bot = 0
 		self.label_error_d.setText(_translate("Form", "", None))
+
+
+	def go_to_source(self):
+		if self.current_position != AT_DESTINATION:
+			print "ERROR: Expected current position is Destination"
+			return
+
+		if self.parcel_on_bot == 0:
+			self.update_position_and_orientation(self.goal.target_pose, start_position)
+			print "Go Home"
+			self.clear_message()
+		else:
+			self.label_error_d.setText(_translate("Form", "Please pick up your \nparcel", None))
+			return
+
+		self.update_header(self.goal.target_pose.header)
+		result = self.navigate()
+
+		if result is True:
+			print "HOME REACHED"
+			self.current_position = AT_SOURCE
+			self.show_source_ui()
+		else:
+			print "ERROR: Navigation Failed"
+			self.go_to_source()
 
 
 	#def update_values(self):
