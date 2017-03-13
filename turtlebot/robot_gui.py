@@ -82,9 +82,9 @@ class Delivery_Bot(object):
 		self.temp_message  = None
 		self.prev_message  = None
 
-	def _sleep(self, time):
+	def _sleep(self, seconds):
 		if STATIC_DEBUG_ENABLED is False:
-			time.sleep(time)
+			time.sleep(seconds)
 
 
 	def update_position_and_orientation(self, element, position):
@@ -358,8 +358,6 @@ class Delivery_Bot(object):
 		self.table_no = self.spinBox.value()
 		self.current_table_position = table_position[self.table_no]
 		print self.current_table_position
-#		self.speech_engine.say('Good morning.')
-#		self.speech_engine.runAndWait()
 
 
 	def set_sender(self):
@@ -453,6 +451,8 @@ class Delivery_Bot(object):
 		if self.sender_name:
 			delivery_msg = delivery_msg + "\nfrom " + self.sender_name
 		self.label_dm.setText(_translate("Form", delivery_msg, None))
+		self.speech_engine.say(delivery_msg)
+		self.speech_engine.runAndWait()
 
 
 	def setup_destination_ui(self):
