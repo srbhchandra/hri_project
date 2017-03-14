@@ -7,7 +7,7 @@ from face_recognition.msg import faces
 Notebook_webcam = 0
 USB_webcam = 1
 
-DISPLAY_VIDEO = False
+DISPLAY_VIDEO = True
 DETECT_HUMANS = False
 
 def detect_faces(img, cascade):
@@ -44,7 +44,7 @@ def draw_rects(img, rects, color):
 
 if __name__ == '__main__':
 
-	pub = rospy.Publisher('face_points', faces, queue_size=20)
+	pub = rospy.Publisher('face_points', faces, queue_size=1)
 	rospy.init_node('face_detect', anonymous=True)
 	r = rospy.Rate(30)
 	msg = faces()
@@ -52,7 +52,7 @@ if __name__ == '__main__':
 	if DISPLAY_VIDEO:
 		cv2.namedWindow("preview")
 	
-	vc = cv2.VideoCapture(USB_webcam)
+	vc = cv2.VideoCapture(Notebook_webcam)
 	cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_alt.xml")
 #	cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 	if DETECT_HUMANS:

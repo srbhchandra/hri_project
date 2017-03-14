@@ -19,8 +19,11 @@ from PyQt4 import QtCore, QtGui
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
 from face_recognition.msg import faces
+import math
+import cv2
+import cv2.cv as cv
 
-STATIC_DEBUG_ENABLED = True
+STATIC_DEBUG_ENABLED = False
 
 #Change to chair positions
 table_position = dict()
@@ -40,11 +43,11 @@ table_position[9] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 #start_position    = (0.0804803371429, -0.39985704422, -0.0, 0.000, 0.000, -0.886831887211, 0.462092202731)
 
 #map_new
-start_position    = (-0.0264121294022, 0.00267863273621, 0.0, 0.000, 0.000, 0.00690895334364, 0.999976132897)
+#start_position    = (-0.0264121294022, 0.00267863273621, 0.0, 0.000, 0.000, 0.00690895334364, 0.999976132897)
 
 #my_map4
-start_position    = (-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087)
-table_position[1] = (3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000)
+start_position    = [-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087]
+table_position[1] = [3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000]
 
 AT_SOURCE      = 0
 AT_DESTINATION = 1
@@ -432,11 +435,136 @@ class Delivery_Bot(object):
 		if result is True:
 			print "DESTINATION REACHED"
 			self.current_position = AT_DESTINATION
+
+#			self.aligning_to_face()
+			self.aligning_to_face2()
 			self.generate_delivery_message()
 			self.show_destination_ui()
 		else:
 			print "ERROR: Navigation Failed"
 			self.go_to_source()
+
+
+	def detect_faces(self, img, cascade):
+		rects = cascade.detectMultiScale(img, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
+		if len(rects) == 0:
+			return None
+		rects[:,2:] += rects[:,:2]
+		return rects
+
+	def aligning_to_face2(self):
+		if STATIC_DEBUG_ENABLED == True:
+			self.update_position_and_orientation(self.goal.target_pose, start_position)
+			self.update_header(self.goal.target_pose.header)
+			self.client.send_goal(self.goal)
+			success = self.client.wait_for_result(rospy.Duration(60)) 
+			state   = self.client.get_state()
+			if success and state == GoalStatus.SUCCEEDED:
+				result = True
+			else:
+				self.client.cancel_goal()
+				result = False
+			print "Moved a bit initially."
+
+		self.aligned_to_face = False
+		if STATIC_DEBUG_ENABLED == False:
+			self.rotate = self.current_table_position
+		else:
+			self.rotate = start_position
+		self.angle_in_radians = 0 #2*math.acos(self.rotate[6])
+
+		vc = cv2.VideoCapture(0)
+		cascade = cv2.CascadeClassifier("../turtlebot_ds/src/face_recognition/data/haarcascade_frontalface_alt.xml")
+		if vc.isOpened(): # try to get the first frame
+			rval, frame = vc.read()
+		else:
+			rval = False
+
+		while rval:
+			rval, frame = vc.read()
+			print "Got a frame"
+			gray = cv2.cvtColor(frame, cv.CV_BGR2GRAY)
+			gray = cv2.equalizeHist(gray)
+	#		gray_small = cv2.resize(gray, size(gray), 0.5, 0.5)
+			face_rects  = self.detect_faces(gray, cascade)
+			if face_rects is not None:
+				print ">>>>>>>>>>>>>>>>>>> Detected face"
+				self.aligned_to_face = True
+				break
+			self.rotate_bot()
+
+	def rotate_bot(self):
+		z = math.sin(self.angle_in_radians/2)
+		w = math.cos(self.angle_in_radians/2)
+		print "z = ", z, "  w = ", w
+		self.rotate[5] = z
+		self.rotate[6] = w
+		self.update_position_and_orientation(self.goal.target_pose, self.rotate)
+		self.update_header(self.goal.target_pose.header)
+		self.client.send_goal(self.goal)
+		success = self.client.wait_for_result(rospy.Duration(60)) 
+		state   = self.client.get_state()
+		if success and state == GoalStatus.SUCCEEDED:
+			result = True
+		else:
+			self.client.cancel_goal()
+			result = False
+		self.angle_in_radians = self.angle_in_radians + 0.05
+		#self.angle_in_radians = self.angle_in_radians #+ 0.05
+		print "Rotated by ", -z, " ,result is ", result
+
+
+	def aligning_to_face(self):
+		if STATIC_DEBUG_ENABLED == False:
+			self.rotate = self.current_table_position
+		else:
+			self.rotate = start_position
+		self.z = self.rotate[5]
+		self.angle_in_radians = 2*math.acos(self.rotate[6])
+		print "Angles = ", 2*math.asin(self.z), self.angle_in_radians
+		print "self.z = ", self.z, " self.w = ", self.rotate[6]
+		#self.angle_in_radians = 0 #2*math.acos(self.rotate[6])
+		self.aligned_to_face = False
+		print "Going to subscribe to /face_points"
+		self.face_detection_node = rospy.Subscriber("/face_points", faces, self.aligning_to_face_cb)
+
+
+	def aligning_to_face_cb(self, face_rect):
+		if self.aligned_to_face == True:
+			return
+		print "in callback for faces: ", face_rect.x1, face_rect.y1, face_rect.x2, face_rect.y2
+		center_x = (face_rect.x1 + face_rect.x2)/2
+#		if center_x <= 360 and center_x >= 280:
+		if center_x > 0:
+			print "DO NOTHING!"
+			self.face_detection_node.unregister()
+			self.aligned_to_face = True
+		else:
+			self.z = math.sin(self.angle_in_radians/2)
+			w = math.cos(self.angle_in_radians/2)
+			#self.z = self.z + 0.02
+			#if self.z > 1:
+			#	self.z = self.z - 2
+			#elif self.z < -1:
+			#	self.z = self.z + 2
+			#w = math.sqrt(1 - self.z*self.z)
+			print "self.z = ", self.z, "  w = ", w
+			self.rotate[5] = -self.z
+			self.rotate[6] = w
+			self.update_position_and_orientation(self.goal.target_pose, self.rotate)
+			self.update_header(self.goal.target_pose.header)
+		#		result = self.navigate()
+			self.client.send_goal(self.goal)
+			# Allow TurtleBot up to 60 seconds to complete task
+			success = self.client.wait_for_result(rospy.Duration(60)) 
+			state   = self.client.get_state()
+			if success and state == GoalStatus.SUCCEEDED:
+				result = True
+			else:
+				self.client.cancel_goal()
+				result = False
+			self.angle_in_radians = self.angle_in_radians + 0.17
+			print "Rotated by ", self.z, " ,result is ", result
 
 
 	def generate_delivery_message(self):
@@ -591,8 +719,7 @@ class Delivery_Bot(object):
 			print "ERROR: Navigation Failed"
 			self.go_to_source()
 
-	def process(self):
-		print "in callback for faces"
+
 
 
 	#def update_values(self):
@@ -632,9 +759,6 @@ if __name__ == "__main__":
 	rospy.init_node('robot_gui')
 	rospy.set_param('battery_value',0)
 	rospy.set_param('robot_status'," ")
-
-	rospy.Subscriber("/face_points",faces,process)
-	#rospy.spin()
 
 	app  = QtGui.QApplication(sys.argv)
 	db   = Delivery_Bot()
