@@ -346,90 +346,6 @@ geometry_msgs_generate_messages_py/fast:
 .PHONY : geometry_msgs_generate_messages_py/fast
 
 # Convenience name for target.
-cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-.PHONY : cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_cpp: cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/rule
-.PHONY : roscpp_generate_messages_cpp
-
-# fast build rule for target.
-roscpp_generate_messages_cpp/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/build.make cmvision/CMakeFiles/roscpp_generate_messages_cpp.dir/build
-.PHONY : roscpp_generate_messages_cpp/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
-.PHONY : cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_lisp: cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/rule
-.PHONY : roscpp_generate_messages_lisp
-
-# fast build rule for target.
-roscpp_generate_messages_lisp/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/build.make cmvision/CMakeFiles/roscpp_generate_messages_lisp.dir/build
-.PHONY : roscpp_generate_messages_lisp/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/roscpp_generate_messages_py.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/roscpp_generate_messages_py.dir/rule
-.PHONY : cmvision/CMakeFiles/roscpp_generate_messages_py.dir/rule
-
-# Convenience name for target.
-roscpp_generate_messages_py: cmvision/CMakeFiles/roscpp_generate_messages_py.dir/rule
-.PHONY : roscpp_generate_messages_py
-
-# fast build rule for target.
-roscpp_generate_messages_py/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/roscpp_generate_messages_py.dir/build.make cmvision/CMakeFiles/roscpp_generate_messages_py.dir/build
-.PHONY : roscpp_generate_messages_py/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
-.PHONY : cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_cpp: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/rule
-.PHONY : rosgraph_msgs_generate_messages_cpp
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_cpp/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build.make cmvision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/build
-.PHONY : rosgraph_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
-.PHONY : cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_lisp: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/rule
-.PHONY : rosgraph_msgs_generate_messages_lisp
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_lisp/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build.make cmvision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/build
-.PHONY : rosgraph_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
-.PHONY : cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-rosgraph_msgs_generate_messages_py: cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/rule
-.PHONY : rosgraph_msgs_generate_messages_py
-
-# fast build rule for target.
-rosgraph_msgs_generate_messages_py/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make cmvision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build
-.PHONY : rosgraph_msgs_generate_messages_py/fast
-
-# Convenience name for target.
 cmvision/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
 	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
 .PHONY : cmvision/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
@@ -470,48 +386,6 @@ sensor_msgs_generate_messages_py: cmvision/CMakeFiles/sensor_msgs_generate_messa
 sensor_msgs_generate_messages_py/fast:
 	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make cmvision/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
 .PHONY : sensor_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-.PHONY : cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_cpp: cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-.PHONY : std_msgs_generate_messages_cpp
-
-# fast build rule for target.
-std_msgs_generate_messages_cpp/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make cmvision/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
-.PHONY : std_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-.PHONY : cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_lisp: cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-.PHONY : std_msgs_generate_messages_lisp
-
-# fast build rule for target.
-std_msgs_generate_messages_lisp/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make cmvision/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
-.PHONY : std_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f CMakeFiles/Makefile2 cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_py: cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : std_msgs_generate_messages_py
-
-# fast build rule for target.
-std_msgs_generate_messages_py/fast:
-	cd /home/turtlebot/hri_project/turtlebot_ds/build && $(MAKE) -f cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/build.make cmvision/CMakeFiles/std_msgs_generate_messages_py.dir/build
-.PHONY : std_msgs_generate_messages_py/fast
 
 src/cmvision.o: src/cmvision.cc.o
 .PHONY : src/cmvision.o
@@ -665,18 +539,9 @@ help:
 	@echo "... install/strip"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... roscpp_generate_messages_cpp"
-	@echo "... roscpp_generate_messages_lisp"
-	@echo "... roscpp_generate_messages_py"
-	@echo "... rosgraph_msgs_generate_messages_cpp"
-	@echo "... rosgraph_msgs_generate_messages_lisp"
-	@echo "... rosgraph_msgs_generate_messages_py"
 	@echo "... sensor_msgs_generate_messages_cpp"
 	@echo "... sensor_msgs_generate_messages_lisp"
 	@echo "... sensor_msgs_generate_messages_py"
-	@echo "... std_msgs_generate_messages_cpp"
-	@echo "... std_msgs_generate_messages_lisp"
-	@echo "... std_msgs_generate_messages_py"
 	@echo "... test"
 	@echo "... src/cmvision.o"
 	@echo "... src/cmvision.i"

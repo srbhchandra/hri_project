@@ -18,6 +18,7 @@ from move_base_msgs.msg import *
 from PyQt4 import QtCore, QtGui
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
+from face_recognition.msg import faces
 
 STATIC_DEBUG_ENABLED = True
 
@@ -590,6 +591,9 @@ class Delivery_Bot(object):
 			print "ERROR: Navigation Failed"
 			self.go_to_source()
 
+	def process(self):
+		print "in callback for faces"
+
 
 	#def update_values(self):
 	  	#self.thread =  WorkThread() 
@@ -621,12 +625,16 @@ class WorkThread(QtCore.QThread):
   		return
 
 
+
 if __name__ == "__main__":
 	import sys
 
 	rospy.init_node('robot_gui')
 	rospy.set_param('battery_value',0)
 	rospy.set_param('robot_status'," ")
+
+	rospy.Subscriber("/face_points",faces,process)
+	#rospy.spin()
 
 	app  = QtGui.QApplication(sys.argv)
 	db   = Delivery_Bot()

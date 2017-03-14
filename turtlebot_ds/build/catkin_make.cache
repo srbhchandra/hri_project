@@ -1,2 +1,2 @@
-cmvision:color_tracking:turtlebot_follower
+cmvision:color_tracking:face_recognition:turtlebot_follower
 -DCATKIN_DEVEL_PREFIX=/home/turtlebot/hri_project/turtlebot_ds/devel -DCMAKE_INSTALL_PREFIX=/home/turtlebot/hri_project/turtlebot_ds/install -G Unix Makefiles

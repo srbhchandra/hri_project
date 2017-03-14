@@ -117,6 +117,7 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unsp
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   INCLUDE("/home/turtlebot/hri_project/turtlebot_ds/build/gtest/cmake_install.cmake")
+  INCLUDE("/home/turtlebot/hri_project/turtlebot_ds/build/face_recognition/cmake_install.cmake")
   INCLUDE("/home/turtlebot/hri_project/turtlebot_ds/build/cmvision/cmake_install.cmake")
   INCLUDE("/home/turtlebot/hri_project/turtlebot_ds/build/color_tracking/cmake_install.cmake")
   INCLUDE("/home/turtlebot/hri_project/turtlebot_ds/build/turtlebot_follower/cmake_install.cmake")

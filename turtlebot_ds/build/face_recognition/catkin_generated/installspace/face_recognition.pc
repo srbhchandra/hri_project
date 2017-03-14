@@ -1,0 +1,8 @@
+prefix=/home/turtlebot/hri_project/turtlebot_ds/install
+
+Name: face_recognition
+Description: Description of face_recognition
+Version: 0.0.0
+Cflags: -I/home/turtlebot/hri_project/turtlebot_ds/install/include
+Libs: -L/home/turtlebot/hri_project/turtlebot_ds/install/lib 
+Requires: roscpp rospy std_msgs message_runtime

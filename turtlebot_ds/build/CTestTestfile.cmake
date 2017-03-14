@@ -5,6 +5,7 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 SUBDIRS(gtest)
+SUBDIRS(face_recognition)
 SUBDIRS(cmvision)
 SUBDIRS(color_tracking)
 SUBDIRS(turtlebot_follower)
