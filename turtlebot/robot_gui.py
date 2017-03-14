@@ -18,7 +18,7 @@ from move_base_msgs.msg import *
 from PyQt4 import QtCore, QtGui
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
-from face_recognition.msg import faces
+#from face_recognition.msg import faces
 import math
 import cv2
 import cv2.cv as cv
@@ -27,16 +27,7 @@ STATIC_DEBUG_ENABLED = False
 
 #Change to chair positions
 table_position = dict()
-table_position[0] = (-0.465, 0.37, 0.010, 0, 0, 0.998, 0.069)
-#table_position[1] = (0.599, 1.03, 0.010, 0, 0, 1.00, -0.020)
-table_position[2] = (4.415, 0.645, 0.010, 0, 0, -0.034, 0.999)
-table_position[3] = (7.409, 0.812, 0.010, 0, 0, -0.119, 0.993)
-table_position[4] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
-table_position[5] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
-table_position[6] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
-table_position[7] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
-table_position[8] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
-table_position[9] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
+table_covariance = dict()
 
 # mymap3
 #table_position[1] = (-6.215, -1.463, 0.0, 0.000, 0.000, 0.000, 1.000)
@@ -46,8 +37,27 @@ table_position[9] = (1.757, 4.377, 0.010, 0, 0, -0.040, 0.999)
 #start_position    = (-0.0264121294022, 0.00267863273621, 0.0, 0.000, 0.000, 0.00690895334364, 0.999976132897)
 
 #my_map4
-start_position    = [-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087]
-table_position[1] = [3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000]
+#start_position    = [-0.0598124265671, 0.180819630623, 0.0, 0.000, 0.000, -0.0510998924315, 0.998693547087]
+#table_position[1] = [3.12, -2.12, 0.0, 0.000, 0.000, 0.000, 1.000]
+
+#cse_3rd
+start_position       = [0.0845686197281, 0.0364561080933, 0.0, 0.000, 0.000, -0.0122166301567, 0.999925374189]
+
+table_position[3202] = [3.70228947056, 0.0306402594524, 0.0, 0.000, 0.000, 0.582214755753, 0.813035041178]
+table_covariance[3202] = [0.006669135234279366, -0.0010135736841311027, 0.0, 0.0, 0.0, 0.0, -0.0010135736841311027, 0.0010314105031045402, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0012669870498752149]
+
+table_position[3204] = [6.35258489409, -0.309624591335, 0.0, 0.000, 0.000, 0.567464851222, 0.823397621218]
+table_covariance[3204] = [0.009614408609870395, -0.000908498876250885, 0.0, 0.0, 0.0, 0.0, -0.000908498876250885, 0.000956289039687655, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001098129231817914]
+
+table_position[3208] = [10.8469794762, -0.546264474035, 0.0, 0.000, 0.000, 0.574873148577, 0.818242545365]
+table_covariance[3208] = [0.008932182322453741, -0.00044274033790170364, 0.0, 0.0, 0.0, 0.0, -0.00044274033790170364, 0.000976655771211421, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.000906640211636339]
+
+table_position[3219] = [22.5201716969, -1.18497509537, 0.0, 0.000, 0.000, -0.63930002795, 0.768957394309]
+table_covariance[3219] = [0.014359111746102826, -0.001675579440455266, 0.0, 0.0, 0.0, 0.0, -0.001675579440455266, 0.0010177222069234215, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001289414324140933]
+
+table_position[3203] = [-0.906258865544, -4.70418834342, 0.0, 0.000, 0.000, -0.992212013592, 0.124560507717]
+table_covariance[3203] = [0.0019433048337310632, 0.0012169281260225873, 0.0, 0.0, 0.0, 0.0, 0.0012169281260225873, 0.006137101553633784, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0014894584035412865]
+
 
 AT_SOURCE      = 0
 AT_DESTINATION = 1
@@ -77,7 +87,7 @@ class Delivery_Bot(object):
 
 	def initialize_params(self):
 		self.current_position = AT_SOURCE
-		self.table_no = 0
+		self.table_no = 3202
 		self.current_table_position = table_position[self.table_no]
 		self.parcel_on_bot = 0
 		self.message       = None
@@ -275,7 +285,7 @@ class Delivery_Bot(object):
 		# ############### Room/Chair No ###############
 		# label
 		running_y = running_y + self.label_box_height + self.unrelated_gap_y
-		self.create_label_ui(Form, "label", self.left_box_x, running_y, "Chair No")
+		self.create_label_ui(Form, "label", self.left_box_x, running_y, "Room No")
 		
 		# Input text box
 		running_y = running_y + self.label_box_height + self.related_gap_y
@@ -360,7 +370,10 @@ class Delivery_Bot(object):
 
 	def set_table_number(self):
 		self.table_no = self.spinBox.value()
-		self.current_table_position = table_position[self.table_no]
+		if self.table_no in table_position.keys():
+			self.current_table_position = table_position[self.table_no]
+		else:
+			print "ERROR: Wrong Room Number"
 		print self.current_table_position
 
 
@@ -471,7 +484,7 @@ class Delivery_Bot(object):
 			self.rotate = self.current_table_position
 		else:
 			self.rotate = start_position
-		self.angle_in_radians = 0 #2*math.acos(self.rotate[6])
+		self.angle_in_radians = 2*math.acos(self.rotate[6])
 
 		vc = cv2.VideoCapture(0)
 		cascade = cv2.CascadeClassifier("../turtlebot_ds/src/face_recognition/data/haarcascade_frontalface_alt.xml")
