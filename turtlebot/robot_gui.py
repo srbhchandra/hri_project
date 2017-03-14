@@ -42,6 +42,7 @@ table_covariance = dict()
 
 #cse_3rd
 start_position       = [0.0845686197281, 0.0364561080933, 0.0, 0.000, 0.000, -0.0122166301567, 0.999925374189]
+table_position[0]    = [0.0845686197281, 0.0364561080933, 0.0, 0.000, 0.000, -0.0122166301567, 0.999925374189]
 
 table_position[3202] = [3.70228947056, 0.0306402594524, 0.0, 0.000, 0.000, 0.582214755753, 0.813035041178]
 table_covariance[3202] = [0.006669135234279366, -0.0010135736841311027, 0.0, 0.0, 0.0, 0.0, -0.0010135736841311027, 0.0010314105031045402, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0012669870498752149]
@@ -84,6 +85,10 @@ class Delivery_Bot(object):
 		self.goal = MoveBaseGoal()
 		self.initialize_params()
 		self.speech_engine = pyttsx.init()
+		voices = self.speech_engine.getProperty('voices')
+		self.speech_engine.setProperty('rate', 140)
+		self.speech_engine.setProperty('voice', voices[9].id)
+
 
 	def initialize_params(self):
 		self.current_position = AT_SOURCE
@@ -95,6 +100,7 @@ class Delivery_Bot(object):
 		self.receiver_name = None
 		self.temp_message  = None
 		self.prev_message  = None
+		self.error_count   = 0
 
 	def _sleep(self, seconds):
 		if STATIC_DEBUG_ENABLED is False:
@@ -146,6 +152,27 @@ class Delivery_Bot(object):
 		self.spinBox.setValue(0)
 		self.initialize_params()
 		print "In show_source_ui: self.parcel_on_bot = ", self.parcel_on_bot
+		self.source_form.show()
+
+
+	def show_repond_ui(self):
+		self.dest_form.close()
+		if self.receiver_name is not None:
+			self.textbox_s.setText(_translate("Form", self.receiver_name, None))
+		else:
+			self.textbox_s.setText(_translate("Form", "", None))
+
+		if self.sender_name is not None:
+			self.textbox_r.setText(_translate("Form", self.sender_name, None))
+		else:
+			self.textbox_r.setText(_translate("Form", "", None))
+
+		self.textbox_m.setText(_translate("Form", "", None))
+		self.checkbox.setEnabled(False)
+		self.checkbox.setChecked(False)
+		self.spinBox.setValue(0)
+#		self.initialize_params()
+		print "In respond_source_ui: self.parcel_on_bot = ", self.parcel_on_bot
 		self.source_form.show()
 
 
@@ -411,6 +438,11 @@ class Delivery_Bot(object):
 		self.textbox_m.clear()
 		print "Message Resetted!!! ", self.message
 
+	def respond(self):
+		#self.temp_message = self.textbox_m.toPlainText()
+		print "In respond::::"
+		self.show_repond_ui()
+
 
 	def navigate(self):
 		if STATIC_DEBUG_ENABLED == False:
@@ -440,6 +472,9 @@ class Delivery_Bot(object):
 			print "Go to Destination"
 		else:
 			self.label_error.setText(_translate("Form", "Need either a parcel or a message to deliver", None))
+			self.speech_engine.say("You missed to place your parcel or message")
+			self.speech_engine.runAndWait()
+			self.error_count = self.error_count + 1
 			return
 
 		self.update_header(self.goal.target_pose.header)
@@ -466,7 +501,8 @@ class Delivery_Bot(object):
 		return rects
 
 	def aligning_to_face2(self):
-		if STATIC_DEBUG_ENABLED == True:
+		current_hack = 1
+		if STATIC_DEBUG_ENABLED == True and current_hack == 1:
 			self.update_position_and_orientation(self.goal.target_pose, start_position)
 			self.update_header(self.goal.target_pose.header)
 			self.client.send_goal(self.goal)
@@ -500,7 +536,7 @@ class Delivery_Bot(object):
 			gray = cv2.equalizeHist(gray)
 	#		gray_small = cv2.resize(gray, size(gray), 0.5, 0.5)
 			face_rects  = self.detect_faces(gray, cascade)
-			if face_rects is not None:
+			if face_rects is not None or current_hack == 0:
 				print ">>>>>>>>>>>>>>>>>>> Detected face"
 				self.aligned_to_face = True
 				break
@@ -581,20 +617,23 @@ class Delivery_Bot(object):
 
 
 	def generate_delivery_message(self):
-		delivery_msg = "There is "
-		if self.parcel_on_bot and self.message:
-			delivery_msg = delivery_msg + "an item\nand a message "
-		elif self.parcel_on_bot:
-			delivery_msg = delivery_msg + "an item "
-		elif self.message:
-			delivery_msg = delivery_msg + "a message "
+		delivery_msg = "Hi "
 		if self.receiver_name:
-			delivery_msg = delivery_msg + "\nfor " + self.receiver_name
+			delivery_msg = delivery_msg + self.receiver_name + " ,\n"
+
+		if self.parcel_on_bot and self.message:
+			delivery_msg = delivery_msg + "You have an item\nand a message "
+		elif self.parcel_on_bot:
+			delivery_msg = delivery_msg + "You have an item "
+		elif self.message:
+			delivery_msg = delivery_msg + "You have a message "
 		if self.sender_name:
 			delivery_msg = delivery_msg + "\nfrom " + self.sender_name
-		self.label_dm.setText(_translate("Form", delivery_msg, None))
+
+		print delivery_msg
 		self.speech_engine.say(delivery_msg)
 		self.speech_engine.runAndWait()
+		self.label_dm.setText(_translate("Form", delivery_msg, None))
 
 
 	def setup_destination_ui(self):
@@ -635,12 +674,13 @@ class Delivery_Bot(object):
 		self.textbox_m_d = self.create_text_box_ui(Form, "textbox_m_d", self.right_box_x, running_y, 
 			self.msg_box_width, self.msg_box_height)
 
-		# ############### Go Button ###############
+		# ############### Respond Button ###############
 		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
 		right_go_button_y = running_y
 		self.pushButton_respond = self.create_push_button_ui(Form, "pushButton_respond", 
 			self.right_box_x + push_button_gap, running_y, "Respond", length_x=2*push_button_len + push_button_gap, 
 			font=self.font_large)
+		self.pushButton_respond.setEnabled(False)
 
 		# ############### Go Button ###############
 		running_y = running_y + self.box_height + self.unrelated_gap_y
@@ -688,6 +728,7 @@ class Delivery_Bot(object):
 		QtCore.QObject.connect(self.pushButton_clear_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clear_message)
 		QtCore.QObject.connect(self.checkbox_d, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_received)
 		QtCore.QObject.connect(self.pushButton_go_d, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go_to_source)
+		QtCore.QObject.connect(self.pushButton_respond, QtCore.SIGNAL(_fromUtf8("clicked()")), self.respond)
 		QtCore.QMetaObject.connectSlotsByName(self.dest_form)
 
 
@@ -719,6 +760,9 @@ class Delivery_Bot(object):
 			self.clear_message()
 		else:
 			self.label_error_d.setText(_translate("Form", "Please pick up your \nparcel", None))
+			self.speech_engine.say("Don't forget your parcel")
+			self.speech_engine.runAndWait()
+			self.error_count = self.error_count + 1
 			return
 
 		self.update_header(self.goal.target_pose.header)
@@ -726,6 +770,7 @@ class Delivery_Bot(object):
 
 		if result is True:
 			print "HOME REACHED"
+			print "Error Count = ", self.error_count
 			self.current_position = AT_SOURCE
 			self.show_source_ui()
 		else:
