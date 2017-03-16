@@ -3,7 +3,7 @@ import cv2.cv as cv
 import sys
 
 Notebook_webcam = 0
-USB_webcam = 1
+USB_webcam = 2 # 1
 
 DISPLAY_VIDEO = True
 DETECT_HUMANS = False
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 	if DISPLAY_VIDEO:
 		cv2.namedWindow("preview")
 	
-	vc = cv2.VideoCapture(USB_webcam)
+	vc = cv2.VideoCapture(2)
 	cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
 #	cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 	if DETECT_HUMANS:

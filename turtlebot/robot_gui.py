@@ -22,12 +22,13 @@ from geometry_msgs.msg import Pose, Point, Quaternion,PoseWithCovarianceStamped
 import math
 import cv2
 import cv2.cv as cv
+import os
 
-STATIC_DEBUG_ENABLED         = True
-DISABLE_FACE_DETECT_ROTATION = True
+STATIC_DEBUG_ENABLED         = False
+DISABLE_FACE_DETECT_ROTATION = False
 
 Notebook_webcam = 0
-USB_webcam      = 1
+USB_webcam      = 2  # 1
 
 #Change to chair positions
 table_position = dict()
@@ -64,6 +65,7 @@ table_position[3203] = [-0.906258865544, -4.70418834342, 0.0, 0.000, 0.000, -0.9
 table_covariance[3203] = [0.0019433048337310632, 0.0012169281260225873, 0.0, 0.0, 0.0, 0.0, 0.0012169281260225873, 0.006137101553633784, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0014894584035412865]
 
 
+AT_HOME        = 0
 AT_SOURCE      = 0
 AT_DESTINATION = 1
 
@@ -87,32 +89,56 @@ class Delivery_Bot(object):
 	def __init__(self):
 		self.client = actionlib.SimpleActionClient('move_base',MoveBaseAction)
 		self.goal = MoveBaseGoal()
+		self.rotation_angle_increments = 0.1
+		self.home_table_no   = 0
+		self.error_count     = 0
+		self.dest_table_no   = 0
+
 		self.initialize_params()
+
 		self.speech_engine = pyttsx.init()
-		voices = self.speech_engine.getProperty('voices')
+		self.voices = self.speech_engine.getProperty('voices')
 		self.speech_engine.setProperty('rate', 120)
 		# Voices 10 to 14 seem fine enough. There are 67 voices. Haven't checked them at out.
-		self.speech_engine.setProperty('voice', voices[11].id)
+		self.speech_engine.setProperty('voice', self.voices[11].id)
 		# Different voice options at - https://pythonspot.com/speech-engines-with-python-tutorial/
-		self.vc      = cv2.VideoCapture(Notebook_webcam)
+
+		retv = False
+		self.vc      = cv2.VideoCapture(USB_webcam)
 		self.cascade = cv2.CascadeClassifier("../turtlebot_ds/src/face_recognition/data/haarcascade_frontalface_alt.xml")
 		if self.vc.isOpened(): # try to get the first frame
-			_, _ = self.vc.read()
-		else:
+			retv, _ = self.vc.read()
+		print "Camera Initialization status: ", retv
+		if retv == False:
 			print "Error: Video capture not working"
+
+
+	def _say(self, msg):
+		temp_msg = str(msg)
+		msg1 = "espeak '" + temp_msg + "'"
+		os.system(msg1)
+
+
+	def _say2(self, msg):
+		self.speech_engine = pyttsx.init()
+		self.speech_engine.setProperty('rate', 120)
+		self.speech_engine.setProperty('voice', self.voices[11].id)
+		self.speech_engine.say(msg)
+#		self.speech_engine.runAndWait()
+		self._sleep(5)
 
 
 	def initialize_params(self):
 		self.current_position = AT_SOURCE
-		self.table_no = 3202
-		self.current_table_position = table_position[self.table_no]
+		self.source_table_no = self.dest_table_no
+		self.current_table_position = table_position[self.source_table_no]
 		self.parcel_on_bot = 0
 		self.message       = None
 		self.sender_name   = None
 		self.receiver_name = None
 		self.temp_message  = None
 		self.prev_message  = None
-		self.error_count   = 0
+
 
 	def _sleep(self, seconds):
 		if STATIC_DEBUG_ENABLED is False:
@@ -161,35 +187,47 @@ class Delivery_Bot(object):
 		self.textbox_r.setText(_translate("Form", "", None))
 		self.textbox_m.setText(_translate("Form", "", None))
 		self.checkbox.setChecked(False)
-		self.spinBox.setValue(0)
-		self.initialize_params()
+		self.comboBox.setCurrentIndex(table_position.keys().index(0))
 		print "In show_source_ui: self.parcel_on_bot = ", self.parcel_on_bot
 		self.source_form.show()
+		self.initialize_params()
 
 
-	def show_repond_ui(self):
+	def show_respond_ui(self):
 		self.dest_form.close()
+		sender_name   = self.sender_name
+		receiver_name = self.receiver_name
+
 		if self.receiver_name is not None:
-			self.textbox_s.setText(_translate("Form", self.receiver_name, None))
+			# self.sender_name gets updated with receiver_name
+			self.textbox_s.setText(_translate("Form", receiver_name, None))
 		else:
 			self.textbox_s.setText(_translate("Form", "", None))
 
 		if self.sender_name is not None:
-			self.textbox_r.setText(_translate("Form", self.sender_name, None))
+			# self.receiver_name gets updated with sender_name
+			self.textbox_r.setText(_translate("Form", sender_name, None))
 		else:
 			self.textbox_r.setText(_translate("Form", "", None))
 
-		self.textbox_m.setText(_translate("Form", "", None))
-		self.checkbox.setEnabled(False)
 		self.checkbox.setChecked(False)
-		self.spinBox.setValue(0)
-#		self.initialize_params()
+		self.comboBox.setCurrentIndex(table_position.keys().index(self.source_table_no))
 		print "In respond_source_ui: self.parcel_on_bot = ", self.parcel_on_bot
 		self.source_form.show()
+		self.textbox_m.setText(_translate("Form", "", None))
+		self.prev_message    = self.message
+		self.temp_message    = None
+		self.message         = None
+		source_table_no      = self.source_table_no
+		self.source_table_no = self.dest_table_no
+		self.dest_table_no   = source_table_no
+		self.current_table_position = table_position[self.source_table_no]
+		self.parcel_on_bot   = 0
 
 
 	def show_destination_ui(self):
 		self.source_form.close()
+		self.textbox_m_d.setText(_translate("Form", "", None))
 		self.checkbox_d.setChecked(False)
 		self.dest_form.show()
 
@@ -259,6 +297,21 @@ class Delivery_Bot(object):
 		return checkbox
 
 
+	def create_combo_box_ui(self, Form, combo_box_name, start_x, start_y, length_x=0, length_y=0, font=None):
+		ComboBox = QtGui.QComboBox(Form)
+		if length_x == 0:
+			length_x = self.box_width
+		if length_y == 0:
+			length_y = self.box_height
+		if font == None:
+			font = self.font_large
+		self.set_ui_params(ComboBox, start_x, start_y, length_x, length_y, combo_box_name, None, font)			
+#		ComboBox.addItems(table_position.keys())
+		for k in table_position.keys():
+			ComboBox.addItem(str(k))
+		return ComboBox
+
+
 	def create_spin_box_ui(self, Form, spin_box_name, start_x, start_y, max=9999, length_x=0, length_y=0, font=None):
 		spinBox = QtGui.QSpinBox(Form)
 		if length_x == 0:
@@ -318,7 +371,7 @@ class Delivery_Bot(object):
 		running_y = running_y + self.label_box_height + self.related_gap_y
 		self.progressBar_s = QtGui.QProgressBar(Form)
 		self.progressBar_s.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
-		self.progressBar_s.setProperty("value", 0)
+		self.progressBar_s.setProperty("value", 46)
 		self.progressBar_s.setObjectName(_fromUtf8("progressBar_s"))
 
 		# ############### Room/Chair No ###############
@@ -328,7 +381,8 @@ class Delivery_Bot(object):
 		
 		# Input text box
 		running_y = running_y + self.label_box_height + self.related_gap_y
-		self.spinBox = self.create_spin_box_ui(Form, "spinBox", self.left_box_x, running_y, max=4299)
+#		self.spinBox = self.create_spin_box_ui(Form, "spinBox", self.left_box_x, running_y, max=4299)
+		self.comboBox = self.create_combo_box_ui(Form, "comboBox", self.left_box_x, running_y)
 
 		# ############### Sender's Name ###############
 		# label
@@ -367,7 +421,8 @@ class Delivery_Bot(object):
 		# label
 		running_y = running_y + self.label_box_height + self.related_gap_y
 		running_y = running_y + self.label_box_height + self.unrelated_gap_y
-		self.label_m = self.create_label_ui(Form, "label_m", self.right_box_x, running_y, "Message")
+		self.label_m = self.create_label_ui(Form, "label_m", self.right_box_x, running_y, 
+			"Type below a message to deliver", 2*self.label_box_width, self.label_box_height)
 
 		# Input text box
 		running_y = running_y + self.label_box_height + self.related_gap_y
@@ -396,7 +451,8 @@ class Delivery_Bot(object):
 
 
 	def connect_source_ui_callbacks(self):
-		QtCore.QObject.connect(self.spinBox, QtCore.SIGNAL(_fromUtf8("valueChanged(int)")), self.set_table_number)
+		self.comboBox.currentIndexChanged.connect(self.set_table_number)
+#		QtCore.QObject.connect(self.comboBox, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.set_table_number)
 		QtCore.QObject.connect(self.textbox_s, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_sender)
 		QtCore.QObject.connect(self.textbox_r, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.set_receiver)
 		QtCore.QObject.connect(self.textbox_m, QtCore.SIGNAL(_fromUtf8("textChanged()")), self.save_temp_message)
@@ -408,12 +464,12 @@ class Delivery_Bot(object):
 
 
 	def set_table_number(self):
-		self.table_no = self.spinBox.value()
-		if self.table_no in table_position.keys():
-			self.current_table_position = table_position[self.table_no]
+		self.dest_table_no = int(self.comboBox.currentText())
+		if self.dest_table_no in table_position.keys():
+			self.current_table_position = table_position[self.dest_table_no]
 		else:
 			print "ERROR: Wrong Room Number"
-		print self.current_table_position
+		print self.dest_table_no, self.current_table_position
 
 
 	def set_sender(self):
@@ -429,6 +485,7 @@ class Delivery_Bot(object):
 
 	def parcel_placed(self):
 		self.parcel_on_bot = 1 - self.parcel_on_bot
+		print ">>  In function parcel_placed, ", self.parcel_on_bot
 		if self.parcel_on_bot:
 			self.label_error.setText(_translate("Form", "", None))
 
@@ -450,20 +507,17 @@ class Delivery_Bot(object):
 		self.textbox_m.clear()
 		print "Message Resetted!!! ", self.message
 
-	def respond(self):
-		#self.temp_message = self.textbox_m.toPlainText()
-		print "In respond::::"
-		self.show_repond_ui()
 
-
-	def navigate(self):
+	def navigate(self, position):
+		self.update_position_and_orientation(self.goal.target_pose, position)
+		self.update_header(self.goal.target_pose.header)
 		if STATIC_DEBUG_ENABLED == False:
 			self.client.send_goal(self.goal)
 			# Allow TurtleBot up to 60 seconds to complete task
 			success = self.client.wait_for_result(rospy.Duration(60)) 
 			state   = self.client.get_state()
 		else:
-			time.sleep(3)
+			time.sleep(1) #3
 			success = True
 			state   = GoalStatus.SUCCEEDED
 
@@ -475,34 +529,73 @@ class Delivery_Bot(object):
 
 
 	def go_to_destination(self):
-		if self.current_position != AT_SOURCE:
-			print "ERROR: Expected current position is Source"
-			return
-
 		if self.parcel_on_bot or self.message:
-			self.update_position_and_orientation(self.goal.target_pose, self.current_table_position)
 			print "Go to Destination"
 		else:
 			self.label_error.setText(_translate("Form", "Need either a parcel or a message to deliver", None))
-			self.speech_engine.say("You missed to place your parcel or message")
-			self.speech_engine.runAndWait()
+			self._say("You missed to place your parcel or message")
+#			self.speech_engine.say("You missed to place your parcel or message")
+#			self.speech_engine.runAndWait()
+#			self.speech_engine.runAndWait()
 			self.error_count = self.error_count + 1
 			return
 
-		self.update_header(self.goal.target_pose.header)
-		result = self.navigate()
+		self.textbox_m.clear()
+		self.textbox_m.setText(_translate("Form", "", None))
+		result = self.navigate(self.current_table_position)
 
 		if result is True:
-			print "DESTINATION REACHED"
-			self.current_position = AT_DESTINATION
+			if self.dest_table_no != 0:
+				print "DESTINATION REACHED"
+				self.current_position = AT_DESTINATION
 
-#			self.align_to_face_external()
-			self.align_to_face_internal()
-			self.generate_delivery_message()
-			self.show_destination_ui()
+	#			self.align_to_face_external()
+				self.align_to_face_internal()
+				self.generate_delivery_message()
+				self.show_destination_ui()
+				self.pushButton_go_d.setText(_translate("Form", "Go Home", None))
+				self.pushButton_respond.setEnabled(True)
+				self.pushButton_deliver.setEnabled(True)
+			else:
+				print "HOME REACHED"
+				self.current_position = AT_HOME
+				self.generate_delivery_message()
+				self.show_destination_ui()
+				self.pushButton_go_d.setText(_translate("Form", "Done", None))
+				self.pushButton_respond.setEnabled(False)
+				self.pushButton_deliver.setEnabled(False)
 		else:
 			print "ERROR: Navigation Failed"
-			self.go_to_source()
+			self.go_home()
+
+
+	def go_home(self):
+		if self.current_position == AT_HOME:
+			print "Already at home"
+			self.show_source_ui()
+			return
+
+		if self.parcel_on_bot == 1:
+			self.label_error_d.setText(_translate("Form", "Please pick up your \nparcel", None))
+			self._say("Don't forget your parcel")
+#			self.speech_engine.say("Don't forget your parcel")
+#			self.speech_engine.runAndWait()
+#			self.speech_engine.runAndWait()
+			self.error_count = self.error_count + 1
+			return
+
+		print "Go Home"
+		self.clear_message()
+		result = self.navigate(start_position)
+
+		if result is True:
+			print "HOME REACHED"
+			print "Error Count = ", self.error_count
+			self.current_position = AT_SOURCE
+			self.show_source_ui()
+		else:
+			print "ERROR: Navigation Failed"
+			self.go_home()
 
 
 	def detect_faces(self, img):
@@ -561,7 +654,7 @@ class Delivery_Bot(object):
 		else:
 			self.client.cancel_goal()
 			print "Failed Rotation"
-		self.angle_in_radians = self.angle_in_radians + 0.05
+		self.angle_in_radians = self.angle_in_radians + self.rotation_angle_increments
 
 
 	def align_to_face_external(self):
@@ -632,8 +725,10 @@ class Delivery_Bot(object):
 			delivery_msg = delivery_msg + "\nfrom " + self.sender_name
 
 		print delivery_msg
-		self.speech_engine.say(delivery_msg)
-		self.speech_engine.runAndWait()
+		self._say(delivery_msg)
+#		self.speech_engine.say(delivery_msg)
+#		self.speech_engine.runAndWait()
+#		self.speech_engine.runAndWait()
 		self.label_dm.setText(_translate("Form", delivery_msg, None))
 
 
@@ -679,15 +774,19 @@ class Delivery_Bot(object):
 		running_y = running_y + self.msg_box_height + self.unrelated_gap_y
 		right_go_button_y = running_y
 		self.pushButton_respond = self.create_push_button_ui(Form, "pushButton_respond", 
-			self.right_box_x + push_button_gap, running_y, "Respond", length_x=2*push_button_len + push_button_gap, 
+			self.right_box_x + push_button_gap, running_y, "Respond", length_x=push_button_len, 
 			font=self.font_large)
-		self.pushButton_respond.setEnabled(False)
 
 		# ############### Go Button ###############
-		running_y = running_y + self.box_height + self.unrelated_gap_y
 		self.pushButton_go_d = self.create_push_button_ui(Form, "pushButton_go_d", 
-			self.right_box_x + push_button_gap, running_y, "Go Home", length_x=2*push_button_len + push_button_gap, 
-			font=self.font_large)
+			self.right_box_x + push_button_len + 2*push_button_gap, running_y, "Go Home", 
+			length_x=push_button_len, font=self.font_large)
+
+		# ############### Deliver Button ###############
+		running_y = running_y + self.box_height + self.unrelated_gap_y
+		self.pushButton_deliver = self.create_push_button_ui(Form, "pushButton_deliver", 
+			self.right_box_x + push_button_gap, running_y, 
+			"Deliver elsewhere", length_x=2*push_button_len + push_button_gap, font=self.font_large)
 
 
 		# ------------- LEFT SIDE OF GUI -------------
@@ -700,14 +799,14 @@ class Delivery_Bot(object):
 		running_y = running_y + self.label_box_height + self.related_gap_y
 		self.progressBar_d = QtGui.QProgressBar(Form)
 		self.progressBar_d.setGeometry(QtCore.QRect(self.left_box_x, running_y, self.label_box_width, self.label_box_height))
-		self.progressBar_d.setProperty("value", 0)
+		self.progressBar_d.setProperty("value", 46)
 		self.progressBar_d.setObjectName(_fromUtf8("progressBar_d"))
 
 		# ############### Destination Main Message ###############
 		# label
 		running_y = right_message_label_y
 		self.label_dm = self.create_label_ui(Form, "label_dm", self.left_box_x, running_y, "", 
-			self.label_box_width, 4*self.box_height, self.font_large)
+			self.label_box_width+5, 4*self.box_height, self.font_large)
 
 		# ############### Parcel Received Check box ###############
 		running_y = right_go_button_y + 5
@@ -728,8 +827,9 @@ class Delivery_Bot(object):
 		QtCore.QObject.connect(self.pushButton_show_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.show_message)
 		QtCore.QObject.connect(self.pushButton_clear_msg, QtCore.SIGNAL(_fromUtf8("clicked()")), self.clear_message)
 		QtCore.QObject.connect(self.checkbox_d, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.parcel_received)
-		QtCore.QObject.connect(self.pushButton_go_d, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go_to_source)
-		QtCore.QObject.connect(self.pushButton_respond, QtCore.SIGNAL(_fromUtf8("clicked()")), self.respond)
+		QtCore.QObject.connect(self.pushButton_go_d, QtCore.SIGNAL(_fromUtf8("clicked()")), self.go_home)
+		QtCore.QObject.connect(self.pushButton_respond, QtCore.SIGNAL(_fromUtf8("clicked()")), self.respond_to_sender)
+		QtCore.QObject.connect(self.pushButton_deliver, QtCore.SIGNAL(_fromUtf8("clicked()")), self.deliver_elsewhere)
 		QtCore.QMetaObject.connectSlotsByName(self.dest_form)
 
 
@@ -750,36 +850,31 @@ class Delivery_Bot(object):
 		self.label_error_d.setText(_translate("Form", "", None))
 
 
-	def go_to_source(self):
-		if self.current_position != AT_DESTINATION:
-			print "ERROR: Expected current position is Destination"
-			return
-
-		if self.parcel_on_bot == 0:
-			self.update_position_and_orientation(self.goal.target_pose, start_position)
-			print "Go Home"
-			self.clear_message()
-		else:
+	def respond_to_sender(self):
+		#self.temp_message = self.textbox_m.toPlainText()
+		print "In respond_to_sender ::::"
+		if self.parcel_on_bot == 1:
 			self.label_error_d.setText(_translate("Form", "Please pick up your \nparcel", None))
-			self.speech_engine.say("Don't forget your parcel")
-			self.speech_engine.runAndWait()
+			self._say("Don't forget your parcel")
+#			self.speech_engine.say("Don't forget your parcel")
+#			self.speech_engine.runAndWait()
+#			self.speech_engine.runAndWait()
 			self.error_count = self.error_count + 1
 			return
-
-		self.update_header(self.goal.target_pose.header)
-		result = self.navigate()
-
-		if result is True:
-			print "HOME REACHED"
-			print "Error Count = ", self.error_count
-			self.current_position = AT_SOURCE
-			self.show_source_ui()
-		else:
-			print "ERROR: Navigation Failed"
-			self.go_to_source()
+		self.show_respond_ui()
 
 
-
+	def deliver_elsewhere(self):
+		print "Deliver further ::::"
+		if self.parcel_on_bot == 1:
+			self.label_error_d.setText(_translate("Form", "Please pick up your \nparcel", None))
+			self._say("Don't forget your parcel")
+#			self.speech_engine.say("Don't forget your parcel")
+#			self.speech_engine.runAndWait()
+#			self.speech_engine.runAndWait()
+			self.error_count = self.error_count + 1
+			return
+		self.show_source_ui()
 
 	#def update_values(self):
 	  	#self.thread =  WorkThread() 
