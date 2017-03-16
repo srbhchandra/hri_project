@@ -23,7 +23,11 @@ import math
 import cv2
 import cv2.cv as cv
 
-STATIC_DEBUG_ENABLED = False
+STATIC_DEBUG_ENABLED         = True
+DISABLE_FACE_DETECT_ROTATION = True
+
+Notebook_webcam = 0
+USB_webcam      = 1
 
 #Change to chair positions
 table_position = dict()
@@ -86,8 +90,16 @@ class Delivery_Bot(object):
 		self.initialize_params()
 		self.speech_engine = pyttsx.init()
 		voices = self.speech_engine.getProperty('voices')
-		self.speech_engine.setProperty('rate', 140)
-		self.speech_engine.setProperty('voice', voices[9].id)
+		self.speech_engine.setProperty('rate', 120)
+		# Voices 10 to 14 seem fine enough. There are 67 voices. Haven't checked them at out.
+		self.speech_engine.setProperty('voice', voices[11].id)
+		# Different voice options at - https://pythonspot.com/speech-engines-with-python-tutorial/
+		self.vc      = cv2.VideoCapture(Notebook_webcam)
+		self.cascade = cv2.CascadeClassifier("../turtlebot_ds/src/face_recognition/data/haarcascade_frontalface_alt.xml")
+		if self.vc.isOpened(): # try to get the first frame
+			_, _ = self.vc.read()
+		else:
+			print "Error: Video capture not working"
 
 
 	def initialize_params(self):
@@ -484,8 +496,8 @@ class Delivery_Bot(object):
 			print "DESTINATION REACHED"
 			self.current_position = AT_DESTINATION
 
-#			self.aligning_to_face()
-			self.aligning_to_face2()
+#			self.align_to_face_external()
+			self.align_to_face_internal()
 			self.generate_delivery_message()
 			self.show_destination_ui()
 		else:
@@ -493,27 +505,24 @@ class Delivery_Bot(object):
 			self.go_to_source()
 
 
-	def detect_faces(self, img, cascade):
-		rects = cascade.detectMultiScale(img, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
+	def detect_faces(self, img):
+		rects = self.cascade.detectMultiScale(img, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30), flags = cv.CV_HAAR_SCALE_IMAGE)
 		if len(rects) == 0:
 			return None
 		rects[:,2:] += rects[:,:2]
 		return rects
 
-	def aligning_to_face2(self):
-		current_hack = 1
-		if STATIC_DEBUG_ENABLED == True and current_hack == 1:
+
+	def align_to_face_internal(self):
+		# Testing only face detection related rotation is a problem as amcl expects some
+		# non-rotation movement before pure rotation. Hence to overcome the bug below,
+		# we navigate to the initial position itself which should be very little or no
+		# navigation at all.
+		if STATIC_DEBUG_ENABLED == True and DISABLE_FACE_DETECT_ROTATION == False:
+			print "Move a bit initially."
 			self.update_position_and_orientation(self.goal.target_pose, start_position)
 			self.update_header(self.goal.target_pose.header)
 			self.client.send_goal(self.goal)
-			success = self.client.wait_for_result(rospy.Duration(60)) 
-			state   = self.client.get_state()
-			if success and state == GoalStatus.SUCCEEDED:
-				result = True
-			else:
-				self.client.cancel_goal()
-				result = False
-			print "Moved a bit initially."
 
 		self.aligned_to_face = False
 		if STATIC_DEBUG_ENABLED == False:
@@ -522,30 +531,24 @@ class Delivery_Bot(object):
 			self.rotate = start_position
 		self.angle_in_radians = 2*math.acos(self.rotate[6])
 
-		vc = cv2.VideoCapture(0)
-		cascade = cv2.CascadeClassifier("../turtlebot_ds/src/face_recognition/data/haarcascade_frontalface_alt.xml")
-		if vc.isOpened(): # try to get the first frame
-			rval, frame = vc.read()
-		else:
-			rval = False
-
-		while rval:
-			rval, frame = vc.read()
+		while self.aligned_to_face == False:
+			rval, frame = self.vc.read()
 			print "Got a frame"
 			gray = cv2.cvtColor(frame, cv.CV_BGR2GRAY)
 			gray = cv2.equalizeHist(gray)
-	#		gray_small = cv2.resize(gray, size(gray), 0.5, 0.5)
-			face_rects  = self.detect_faces(gray, cascade)
-			if face_rects is not None or current_hack == 0:
+			face_rects  = self.detect_faces(gray)
+
+			if face_rects is not None or DISABLE_FACE_DETECT_ROTATION == True:
 				print ">>>>>>>>>>>>>>>>>>> Detected face"
 				self.aligned_to_face = True
 				break
 			self.rotate_bot()
 
+
 	def rotate_bot(self):
 		z = math.sin(self.angle_in_radians/2)
 		w = math.cos(self.angle_in_radians/2)
-		print "z = ", z, "  w = ", w
+		print "Rotate Bot:: z = ", z, "  w = ", w
 		self.rotate[5] = z
 		self.rotate[6] = w
 		self.update_position_and_orientation(self.goal.target_pose, self.rotate)
@@ -554,16 +557,14 @@ class Delivery_Bot(object):
 		success = self.client.wait_for_result(rospy.Duration(60)) 
 		state   = self.client.get_state()
 		if success and state == GoalStatus.SUCCEEDED:
-			result = True
+			print "Successful Rotation"
 		else:
 			self.client.cancel_goal()
-			result = False
+			print "Failed Rotation"
 		self.angle_in_radians = self.angle_in_radians + 0.05
-		#self.angle_in_radians = self.angle_in_radians #+ 0.05
-		print "Rotated by ", -z, " ,result is ", result
 
 
-	def aligning_to_face(self):
+	def align_to_face_external(self):
 		if STATIC_DEBUG_ENABLED == False:
 			self.rotate = self.current_table_position
 		else:
